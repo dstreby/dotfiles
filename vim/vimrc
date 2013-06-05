@@ -1,0 +1,75 @@
+execute pathogen#infect()
+
+set nocompatible
+set number
+set hlsearch
+set showmatch
+set incsearch
+set noerrorbells visualbell t_vb=
+set expandtab
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set background=dark
+set encoding=utf-8
+set laststatus=2
+set guifont=Consolas\ for\ Powerline\ FixedD:h9
+set t_Co=256
+set wildmenu
+set cursorline
+
+let g:Powerline_symbols="fancy"
+
+" Powerline
+set rtp+=/home/dstreby/.local/lib/python2.6/site-packages/powerline/bindings/vim
+
+filetype plugin on
+filetype plugin indent on
+
+syntax on
+colorscheme solarized
+set viminfo+=n$HOME/.history/viminfo
+
+set pastetoggle=<F8>
+set backspace=indent,eol,start
+
+"set foldmethod=manual,indent,syntax "set by file type
+set foldnestmax=10  "more to verify what's in a block
+set nofoldenable    "with next command
+set foldlevelstart=1     "just fold top level stuff to start
+" za toggles current fold; zA toggles current fold and all children
+" zr unfolds one level of folding throught document; zR unfolds all
+" zm folds one level of folding throught document; zM folds all
+
+nnoremap <silent> <C-l> :nohl<CR><C-l>
+
+let g:load_doxygen_syntax=1
+let g:DoxygenToolkit_authorName="Daniel Streby"
+let g:DoxygenToolkit_versionString="0.1"
+
+"""""""""""" c-like
+au BufNewFile,BufRead *.cu set ft=c
+autocmd BufRead,BufNewFile *.c,*.cpp,*.h,*.cu setlocal noexpandtab ts=4 sw=4
+autocmd BufRead,BufNewFile *.c,*.cpp,*.h,*.cu setlocal cin noic noai nosmartindent
+autocmd BufRead,BufNewFile *.c,*.cpp,*.h,*.cu setlocal foldmethod=syntax
+"""""""""""" python
+autocmd BufRead,BufNewFile *.py setlocal expandtab ts=4 sw=4
+autocmd BufRead,BufNewFile *.py setlocal nocin noic ai nosmartindent
+autocmd BufRead,BufNewFile *.py setlocal foldmethod=indent
+"""""""""""" make
+autocmd BufRead,BufNewFile FileType make setlocal noexpandtab ts=4 sw=4
+autocmd BufRead,BufNewFile FileType make setlocal nocin noic ai nosmartindent
+"""""""""""" long-lines, with syntax
+autocmd BufRead,BufNewFile *.html,*.tex, setlocal expandtab ts=2 sw=2
+autocmd BufRead,BufNewFile *.html,*.tex, setlocal nocin noic ai nosmartindent
+autocmd BufRead,BufNewFile *.html,*.tex, setlocal linebreak spell
+autocmd BufRead,BufNewFile *.html,*.tex noremap <buffer> <silent> k gk
+autocmd BufRead,BufNewFile *.html,*.tex noremap <buffer> <silent> j gj
+autocmd BufRead,BufNewFile *.html,*.tex hi clear SpellBad
+autocmd BufRead,BufNewFile *.html,*.tex hi SpellBad cterm=underline
+"""""""""""" long-lines, plain text
+autocmd BufRead,BufNewFile *.txt, setlocal nocin noic noai nosmartindent linebreak spell
+autocmd BufRead,BufNewFile *.txt noremap <buffer> <silent> k gk
+autocmd BufRead,BufNewFile *.txt noremap <buffer> <silent> j gj
+autocmd BufRead,BufNewFile *.txt hi clear SpellBad
+autocmd BufRead,BufNewFile *.txt hi SpellBad cterm=underline

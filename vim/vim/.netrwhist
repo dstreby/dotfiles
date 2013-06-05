@@ -1,0 +1,5 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =3
+let g:netrw_dirhist_1='/cygdrive/c/DEV/src/ds-development/tsg-circulaide/netburner'
+let g:netrw_dirhist_2='/home/dstreby/.local/lib/python2.6/site-packages/powerline'
+let g:netrw_dirhist_3='/home/dstreby/repos/public/voltaic.blog/_includes'
