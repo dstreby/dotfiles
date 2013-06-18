@@ -1,6 +1,7 @@
 #!/bin/bash
 
 CHECK=TRUE
+SKIP=FALSE
 
 for LINK in `find $PWD -name '*.sym' -print`; do
     DF=$(echo $LINK | awk -F/ '{print $NF}' | sed -e 's/\.sym//')
@@ -36,11 +37,11 @@ for LINK in `find $PWD -name '*.sym' -print`; do
         esac
     fi
 
-    if [ $SKIP != "TRUE" ]; then
-        if [ $BACK = "TRUE" ]; then
+    if [ "$SKIP" != "TRUE" ]; then
+        if [ "$BACK" == "TRUE" ]; then
             echo -n "Backing up $DF... "
             mv $HOME/.$DF $HOME/.$DF.bak
-        elif [ $OVER = "TRUE" ]; then
+        elif [ "$OVER" = "TRUE" ]; then
             echo -n "Removing $DF... "
            rm $HOME/.$DF
         fi
