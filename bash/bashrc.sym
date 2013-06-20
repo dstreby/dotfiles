@@ -21,7 +21,7 @@ alias la='ls -lah --color=tty'
 alias ll='ls -lh --color=tty'
 alias lt='ls -lhtr --color=tty'
 alias sourceme='source ~/.bashrc'
-alias pcat='pygmentize'
+alias pcat='pygmentize -f terminal256 -O style=monokai -g'
 alias cd=cd_func
 
 # Bash Prompt:

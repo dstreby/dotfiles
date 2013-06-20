@@ -9,9 +9,14 @@ soap()
 {
     if [ $# -lt 2 ]; then
         echo "Missing parameter. Usage: # soap <soap.xml> <url>"
-    else
-        curl -s -d @$1 $2 | pygmentize -l xml
+        return 0
     fi
+    
+    curl -s -d @$1 $2 | \
+        sed -e 's/\s\{2,\}/ /g' | \
+        xmllint --format - | \
+        pygmentize -f terminal256 -l xml -O style=monokai
+
 }
 
 allgit()
