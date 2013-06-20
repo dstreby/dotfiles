@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [ ! -d "$HOME/.history" ]; then
+    mkdir $HOME/.history
+fi
+
 CHECK=TRUE
 SKIP=FALSE
 
