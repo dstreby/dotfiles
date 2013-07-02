@@ -27,10 +27,11 @@ filetype plugin on
 filetype plugin indent on
 
 syntax on
-colorscheme solarized
+"colorscheme solarized
+colorscheme molokai
+let g:molokai_original = 1
 set viminfo+=n$HOME/.history/viminfo
 
-set pastetoggle=<F8>
 set backspace=indent,eol,start
 
 "set foldmethod=manual,indent,syntax "set by file type

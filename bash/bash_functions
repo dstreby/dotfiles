@@ -1,5 +1,10 @@
 # Functions
 
+bak()
+{
+    cp $1 "$1.bak"
+}
+
 mkcd()
 {
     mkdir $1 && cd $1
