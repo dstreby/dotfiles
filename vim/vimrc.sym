@@ -49,7 +49,7 @@ let g:DoxygenToolkit_authorName="Daniel Streby"
 let g:DoxygenToolkit_versionString="0.1"
 
 """""""""""" c-like
-au BufNewFile,BufRead *.cu set ft=c
+au BufNewFile,BufRead *.cu,*.def set ft=c
 autocmd BufRead,BufNewFile *.c,*.cpp,*.h,*.cu setlocal noexpandtab ts=4 sw=4
 autocmd BufRead,BufNewFile *.c,*.cpp,*.h,*.cu setlocal cin noic noai nosmartindent
 autocmd BufRead,BufNewFile *.c,*.cpp,*.h,*.cu setlocal foldmethod=syntax

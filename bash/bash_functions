@@ -54,6 +54,41 @@ allgit()
 	done
 }
 
+gitstrip()
+{
+    if [ -z "$1" ]
+    then
+        echo Requires file-name to strip
+        return 1
+    fi
+
+	BRANCH=$(git status 2>/dev/null | \
+		 awk 'NR==1 { print $4 }')
+
+    echo "Stripping file: $1" 
+    echo "From repo branch $BRANCH"
+    echo "Are you sure you'd like to continue? Y/N"
+  
+    read -s -n1 CONFIRM
+    if [[ "$CONFIRM" != "y" && "$CONFIRM" != "Y" ]]; then
+        echo "Exiting."
+        return 0
+    fi
+
+    echo "*********************************************"
+    
+    git filter-branch --force --index-filter \
+    "git rm --cached --ignore-unmatch $1" \
+    --prune-empty --tag-name-filter cat -- --all
+
+    echo "$1" >> .gitignore
+    
+    git commit -m "Added $1 to .gitignore"
+
+    echo "Push commit to remote using 'git push origin master --force'"
+
+}
+
 passgen()
 {
     if [ -z "$1" ]
@@ -76,7 +111,18 @@ passgen()
 
 parse_git_branch()
 {
-  git status 2>/dev/null | awk 'NR==1 {branch = $4} NR==2 {if($2=="Untracked")printf("\033[00;37m(\033[00;31m %s \033[00;37m) \033[01;41;37m + \033[0m\n",branch); else if($6=="clean)")printf("\033[00;37m(\033[00;32m %s \033[00;37m)\033[0m\n",branch); else printf("\033[00;37m(\033[00;31m %s \033[00;37m) \033[01;41;37m * \033[0m\n",branch);}'
+  git status 2>/dev/null | \
+    awk 'NR==1 {
+        branch = $4
+    } 
+    NR==2 {
+        if( $2=="Untracked" )
+            printf( "\033[00;37m(\033[00;31m %s \033[00;37m) \033[01;41;37m + \033[0m\n", branch );
+        else if( $6=="clean)" )
+            printf( "\033[00;37m(\033[00;32m %s \033[00;37m)\033[0m\n", branch );
+        else
+            printf( "\033[00;37m(\033[00;31m %s \033[00;37m) \033[01;41;37m * \033[0m\n", branch );
+    }'
 }
 
 # This function defines a 'cd' replacement function capable of keeping, 
