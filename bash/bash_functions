@@ -82,9 +82,11 @@ gitstrip()
     --prune-empty --tag-name-filter cat -- --all
 
     echo "$1" >> .gitignore
-    
+
+    git add .gitignore    
     git commit -m "Added $1 to .gitignore"
 
+    echo "*********************************************"
     echo "Push commit to remote using 'git push origin master --force'"
 
 }
