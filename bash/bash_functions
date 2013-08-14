@@ -10,10 +10,22 @@ mkcd()
     mkdir $1 && cd $1
 }
 
+psdt()
+{
+    if [ -z "$1" ]; then
+        echo "Missing parameter. Usage: psdt {pid | name}"
+        return 0
+    fi
+    
+    x=$1
+    ps aux | awk -v search="$x" 'NR == 1; $0 ~ search' | grep -v awk
+
+}
+
 soap()
 {
     if [ $# -lt 2 ]; then
-        echo "Missing parameter. Usage: # soap <soap.xml> <url>"
+        echo "Missing parameter. Usage: soap {soap.xml} {url}"
         return 0
     fi
     
