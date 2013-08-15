@@ -118,8 +118,7 @@ passgen()
 		sed -e "s/.\(.\).\(.\).\(.*\)/$(< /dev/urandom tr -dc "0-9" | \
 		head -c1)\1$(< /dev/urandom tr -dc "a-z" | \
 		head -c1)\2$(< /dev/urandom tr -dc "A-Z" | \
-		head -c1)\3/" | \
-		tee /dev/clipboard
+		head -c1)\3/"
     echo 
 }
 
