@@ -16,7 +16,17 @@ set laststatus=2
 set guifont=Consolas\ for\ Powerline\ FixedD:h9
 set t_Co=256
 set wildmenu
-set cursorline
+
+" Enable CursorLine
+set cursorline cursorcolumn
+" Change Color when entering Insert Mode
+autocmd InsertEnter * highlight  CursorLine ctermbg=Black
+autocmd InsertEnter * highlight  CursorColumn ctermbg=Black
+" Revert Color to default when leaving Insert Mode
+autocmd InsertLeave * highlight  CursorLine ctermbg=234
+autocmd InsertLeave * highlight  CursorColumn ctermbg=234
+" Toggle cursorline/cursorcolumn
+nnoremap <Leader>c :set cursorline! cursorcolumn!<CR>
 
 let g:Powerline_symbols="fancy"
 

@@ -16,6 +16,7 @@ fi
 
 # Aliases:
 alias erxc='erxs -c'
+alias grep='grep --color=always'
 alias ls='ls --color=tty'
 alias la='ls -lah --color=tty'
 alias ll='ls -lh --color=tty'
