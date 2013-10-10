@@ -130,11 +130,11 @@ parse_git_branch()
     } 
     NR==2 {
         if( $2=="Untracked" )
-            printf( "\033[00;37m(\033[00;31m %s \033[00;37m) \033[01;41;37m + \033[0m\n", branch );
+            printf( "\033[00;31m  %s+ \033[0m\n", branch );
         else if( $6=="clean)" )
-            printf( "\033[00;37m(\033[00;32m %s \033[00;37m)\033[0m\n", branch );
+            printf( "\033[00;32m  %s\033[0m\n", branch );
         else
-            printf( "\033[00;37m(\033[00;31m %s \033[00;37m) \033[01;41;37m * \033[0m\n", branch );
+            printf( "\033[00;31m  %s* \033[0m\n", branch );
     }'
 }
 
