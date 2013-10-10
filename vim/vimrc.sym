@@ -38,7 +38,9 @@ filetype plugin indent on
 
 syntax on
 "colorscheme solarized
-colorscheme molokai
+"colorscheme molokai
+colorscheme tomorrownight
+"colorscheme tomorrownightbright
 let g:molokai_original = 1
 set viminfo+=n$HOME/.history/viminfo
 
