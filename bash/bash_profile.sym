@@ -47,3 +47,6 @@ fi
 # if [ -d "${HOME}/info" ]; then
 #   INFOPATH="${HOME}/info:${INFOPATH}"
 # fi
+
+# Modification to $PATH for cw (colorwrapper) use env var NOCOLOR=1 to toggle wrapper
+export PATH="/usr/local/lib/cw:$PATH"
