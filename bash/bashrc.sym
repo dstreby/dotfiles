@@ -29,8 +29,16 @@ alias sourceme='source ~/.bashrc'
 alias pcat='pygmentize -f terminal256 -O style=monokai -g'
 alias cd=cd_func
 
+# ANSI Escape codes:
+ANSI_WHITE="\[\033[00;37m\]"
+ANSI_LTBLU="\[\033[00;34m\]"
+ANSI_GREEN="\[\033[00;32m\]"
+ANSI_RED="\[\033[00;31m\]"
+ANSI_CLR="\[\033[00m\]"
+
 # Bash Prompt:
-PS1='\033[00;37m\]┌─ \[\033[00;34m\]{ \w }\033[00;37m\]$(parse_git_branch)\n\[\033[00;37m\]└─ \[\033[00;32m\]\u\[\033[00;34m\]@\[\033[00;31m\]\h\033[00;32m\]->\[\033[01;37m\]$ \[\033[00m\]'
+PS1="$ANSI_WHITE┌─ $ANSI_LTBLU{ \w }$ANSI_WHITE$(parse_git_branch)\n\
+$ANSI_WHITE└─ $ANSI_GREEN\u$ANSI_LTBLU@$ANSI_RED\h$ANSI_GREEN->$ANSI_WHITE$ $ANSI_CLR"
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
