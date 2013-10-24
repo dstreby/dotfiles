@@ -37,8 +37,7 @@ ANSI_RED="\[\033[00;31m\]"
 ANSI_CLR="\[\033[00m\]"
 
 # Bash Prompt:
-PS1="$ANSI_WHITE┌─ $ANSI_LTBLU{ \w }$ANSI_WHITE$(parse_git_branch)\n\
-$ANSI_WHITE└─ $ANSI_GREEN\u$ANSI_LTBLU@$ANSI_RED\h$ANSI_GREEN->$ANSI_WHITE$ $ANSI_CLR"
+PS1="$ANSI_WHITE┌─ $ANSI_LTBLU{ \w }$ANSI_WHITE"'$(parse_git_branch)'"\n$ANSI_WHITE└─ $ANSI_GREEN\u$ANSI_LTBLU@$ANSI_RED\h$ANSI_GREEN->$ANSI_WHITE$ $ANSI_CLR"
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
