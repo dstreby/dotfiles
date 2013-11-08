@@ -20,14 +20,23 @@ fi
 # Aliases:
 alias erxc='erxs -c'
 alias grep='grep --color=always'
-alias ls='ls --color=tty'
-alias la='ls -lah --color=tty'
-alias ll='ls -lh --color=tty'
-alias lt='ls -lhtr --color=tty'
-alias l='ls++ --potsf'
+alias cl='clear'
 alias sourceme='source ~/.bashrc'
 alias pcat='pygmentize -f terminal256 -O style=monokai -g'
 alias cd=cd_func
+
+# Special provisioning for ls++ aliasing
+alias ls='ls --color=tty'
+if command_exists ls++; then
+    alias ll='ls++ --potsf'
+    alias lt='ls++ --potsf -tr'
+    alias la='ls++ --potsf -a'
+else
+    alias la='ls -lah'
+    alias ll='ls -lh'
+    alias lt='ls -lhtr'
+fi
+    
 
 # ANSI Escape codes:
 ANSI_WHITE="\[\033[00;37m\]"
