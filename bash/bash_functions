@@ -157,6 +157,13 @@ showcolors ()
     echo ""
 }
 
+# Show days passed since given date
+# Borrowed from kjsharke
+ageDay()
+{ 
+    echo $(( (`date +%s` - `date -d "$1" +%s`)/(3600*24) ));
+}
+
 # This function defines a 'cd' replacement function capable of keeping, 
 # displaying and accessing history of visited directories, up to 10 entries.
 # To use it, uncomment it, source this file and try 'cd --'.
