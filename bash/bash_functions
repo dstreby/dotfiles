@@ -56,7 +56,7 @@ allgit()
 		DIR=$1
 	fi
 
-	for REPO in `find $DIR -name ".git" -type d`; do
+	for REPO in $(find $DIR -name ".git" -type d 2>/dev/null); do
 	   WD=$(echo $REPO | awk -F/.git '{print $1}')
 	   echo "-------------------------------------------------------------"
 	   echo $WD | awk -v home="$HOME" '{ sub(home, "~"); print "Repository at: ", $0;}'
@@ -134,9 +134,7 @@ parse_git_branch()
         branch = $4
     } 
     NR==2 {
-        if( $2=="Untracked" )
-            printf( "\033[00;31m  %s+ \033[0m\n", branch );
-        else if( $6=="clean" )
+        if( $6=="clean" )
             printf( "\033[00;32m  %s\033[0m\n", branch );
         else
             printf( "\033[00;31m  %s* \033[0m\n", branch );

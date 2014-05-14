@@ -1,9 +1,16 @@
 # If not running interactively, don't do anything
 [[ "$-" != *i* ]] && return
 
+# Check color support, and set appropriate TERM
+#if [ "$COLORTERM" == "gnome-terminal" ] || [ "$COLORTERM" == "xfce4-terminal" ]; then
+#    TERM=xterm-256color
+#elif [ "$COLORTERM" == "rxvt-xpm" ]; then
+#    TERM=rxvt-256color
+#fi
+
 export HISTFILE=$HOME/.history/bash_history
 
-# Add dir_colors for solarized-ls
+# Add dir_colors
 eval `dircolors $HOME/dotfiles/bash/dir_colors`
 
 # Add user defined dir to PATH
@@ -15,6 +22,22 @@ export EDITOR=vim
 # Source bash functions
 if [ -f "${HOME}/dotfiles/bash/bash_functions" ]; then
     source "${HOME}/dotfiles/bash/bash_functions"
+fi
+
+# Source git completion functions
+if [ -f "${HOME}/dotfiles/bash/git-completion" ]; then
+    source "${HOME}/dotfiles/bash/git-completion"
+fi
+
+# Source git prompt functions
+if [ -f "${HOME}/dotfiles/bash/git-prompt" ]; then
+    source "${HOME}/dotfiles/bash/git-prompt"
+    # Set options for the git PS1
+    export GIT_PS1_SHOWDIRTYSTATE=1
+    export GIT_PS1_SHOWSTASHSTATE=1
+    export GIT_PS1_SHOWUNTRACKEDFILES=1
+    export GIT_PS1_SHOWCOLORHINTS=1
+    export GIT_PS1_SHOWUPSTREAM=1
 fi
 
 # Aliases:
@@ -46,47 +69,52 @@ ANSI_RED="\[\033[00;31m\]"
 ANSI_CLR="\[\033[00m\]"
 
 # Bash Prompt:
-PS1="$ANSI_WHITE┌─ $ANSI_LTBLU{ \w }$ANSI_WHITE"'$(parse_git_branch)'"\n$ANSI_WHITE└─ $ANSI_GREEN\u$ANSI_LTBLU@$ANSI_RED\h$ANSI_GREEN->$ANSI_WHITE$ $ANSI_CLR"
+#PS1="$ANSI_WHITE┌─ $ANSI_LTBLU{ \w }$ANSI_WHITE"'$(parse_git_branch)'"\n$ANSI_WHITE└─ $ANSI_GREEN\u$ANSI_LTBLU@$ANSI_RED\h$ANSI_GREEN->$ANSI_WHITE$ $ANSI_CLR"
+
+PROMPT_COMMAND='__git_ps1 "$ANSI_WHITE┌─ $ANSI_LTBLU{ \w }$ANSI_CLR" "\n$ANSI_WHITE└─ $ANSI_GREEN\u$ANSI_LTBLU@$ANSI_RED\h$ANSI_GREEN->$ANSI_WHITE$ $ANSI_CLR"'
 
 # If this is an xterm set the title to user@host:dir
-case "$TERM" in
-    xterm*|rxvt*)
-        PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD}\007"'
-
-        # Show the currently running command in the terminal title:
-        # http://www.davidpashley.com/articles/xterm-titles-with-bash.html
-        show_command_in_title_bar()
-        {
-            case "$BASH_COMMAND" in
-                *\033]0*)
-                    # The command is trying to set the title bar as well;
-                    # this is most likely the execution of $PROMPT_COMMAND.
-                    # In any case nested escapes confuse the terminal, so don't
-                    # output them.
-                    ;;
-                *)
-                    echo -ne "\033]0;${USER}@${HOSTNAME}: ${BASH_COMMAND}\007"
-                    ;;
-            esac
-        }
-        trap show_command_in_title_bar DEBUG
-        ;;
-    screen*)
-        PROMPT_COMMAND='echo -ne "\033kbash\033\\"'
-        set_screen_title()
-        {
-            case "$BASH_COMMAND" in
-                *\033k*)
-                    ;;
-                *\033]0*)
-                    ;;
-                *)
-                    echo -ne "\033k`echo ${BASH_COMMAND} | awk '{print $1;}'`\033\\"
-                    ;;
-            esac
-        }
-        trap set_screen_title DEBUG
-        ;;
-    *)
-        ;;
-esac
+#case "$TERM" in
+#    xterm*|rxvt*)
+#        PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD}\007"'
+#
+#        # Show the currently running command in the terminal title:
+#        # http://www.davidpashley.com/articles/xterm-titles-with-bash.html
+#        show_command_in_title_bar()
+#        {
+#            case "$BASH_COMMAND" in
+#                *\033]0*)
+#                    # The command is trying to set the title bar as well;
+#                    # this is most likely the execution of $PROMPT_COMMAND.
+#                    # In any case nested escapes confuse the terminal, so don't
+#                    # output them.
+#                    ;;
+#                *\033k*)
+#                    ;;
+#                *)
+#                    echo -ne "\033]0;${USER}@${HOSTNAME}: ${BASH_COMMAND}\007"
+#                    ;;
+#            esac
+#        }
+#        trap show_command_in_title_bar DEBUG
+#        ;;
+#    screen*)
+#        PROMPT_COMMAND='echo -ne "\033kbash\033\\"'
+#        set_screen_title()
+#        {
+#            case "$BASH_COMMAND" in
+#                *\033k*)
+#                    ;;
+#                *\033]0*)
+#                    ;;
+#                *)
+#                    #echo -ne "\033k$(echo ${BASH_COMMAND} | awk '{print $1;}')\033\\"
+#                    echo -ne "\033k FOOOOOO \033\\"
+#                    ;;
+#            esac
+#        }
+#        trap set_screen_title DEBUG
+#        ;;
+#    *)
+#        ;;
+#esac
