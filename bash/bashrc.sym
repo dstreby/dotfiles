@@ -15,6 +15,7 @@ eval `dircolors $HOME/dotfiles/bash/dir_colors`
 
 # Add user defined dir to PATH
 export PATH=$PATH:$HOME/opt/bin:$HOME/.local/bin:/usr/java/latest/bin:
+export GOPATH=$HOME/go
 
 # Set the default EDITOR
 export EDITOR=vim

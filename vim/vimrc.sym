@@ -7,9 +7,9 @@ set showmatch
 set incsearch
 set noerrorbells visualbell t_vb=
 set expandtab
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
 set background=dark
 set encoding=utf-8
 set laststatus=2
@@ -37,11 +37,13 @@ filetype plugin on
 filetype plugin indent on
 
 syntax on
+
 "colorscheme solarized
-"colorscheme molokai
 colorscheme tomorrownight
 "colorscheme tomorrownightbright
-let g:molokai_original = 1
+"colorscheme molokai
+"let g:molokai_original = 1
+
 set viminfo+=n$HOME/.history/viminfo
 
 set backspace=indent,eol,start
@@ -56,9 +58,10 @@ set foldlevelstart=1     "just fold top level stuff to start
 
 nnoremap <silent> <C-l> :nohl<CR><C-l>
 
-let g:load_doxygen_syntax=1
-let g:DoxygenToolkit_authorName="Daniel Streby"
-let g:DoxygenToolkit_versionString="0.1"
+"let g:load_doxygen_syntax=1
+"let g:DoxygenToolkit_authorName="Daniel Streby"
+"let g:DoxygenToolkit_versionString="0.1"
+let g:vim_jsom_syntax_conceal=0
 
 """""""""""" c-like
 au BufNewFile,BufRead *.cu,*.def set ft=c
