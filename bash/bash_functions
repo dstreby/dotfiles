@@ -15,6 +15,12 @@ command_exists()
     command -v "$1" >/dev/null 2>&1
 }
 
+s()
+{
+  echo mplayer -really-quiet "http://translate.google.com/translate_tts?tl=en\&q=$*" | \
+  sed 's/ /+/3g' | sh 2>/dev/null;
+}
+
 psdt()
 {
     if [ -z "$1" ]; then

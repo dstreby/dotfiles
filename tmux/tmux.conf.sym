@@ -10,7 +10,7 @@ bind C-a send-prefix
 
 # Key Bindings
 bind-key -n F5 select-window -t :-
-bind-key -n F6 select-window -t :-
+bind-key -n F6 select-window -t :+
 bind-key -n F7 select-pane -t :.-
 bind-key -n F8 select-pane -t :.+
 
