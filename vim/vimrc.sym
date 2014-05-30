@@ -64,7 +64,7 @@ nnoremap <silent> <C-l> :nohl<CR><C-l>
 let g:vim_jsom_syntax_conceal=0
 
 """""""""""" c-like
-au BufNewFile,BufRead *.cu,*.def set ft=c
+au BufNewFile,BufRead *.cu,*.def,*.go set ft=c
 autocmd BufRead,BufNewFile *.c,*.cpp,*.h,*.cu setlocal noexpandtab ts=4 sw=4
 autocmd BufRead,BufNewFile *.c,*.cpp,*.h,*.cu setlocal cin noic noai nosmartindent
 autocmd BufRead,BufNewFile *.c,*.cpp,*.h,*.cu setlocal foldmethod=syntax
