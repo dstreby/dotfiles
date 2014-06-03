@@ -8,7 +8,15 @@
 #    TERM=rxvt-256color
 #fi
 
+# Bash history settings
+shopt -s histappend
+shopt -s cmdhist
 export HISTFILE=$HOME/.history/bash_history
+export HISTSIZE=10000
+export HISTCONTROL=ignoreboth
+export HISTTIMEFORMAT='%F %T '
+export HISTIGNORE='ls:bg:fg:history'
+
 
 # Add dir_colors
 eval `dircolors $HOME/dotfiles/bash/dir_colors`
@@ -45,7 +53,7 @@ fi
 alias erxc='erxs -c'
 alias grep='grep --color=always'
 alias cl='clear'
-alias sourceme='source ~/.bashrc'
+alias sourceme='source ~/.bash_profile'
 alias pcat='pygmentize -f terminal256 -O style=monokai -g'
 alias cd=cd_func
 alias mknote='touch $(date +%Y%m%d).note'
@@ -74,6 +82,7 @@ ANSI_CLR="\[\033[00m\]"
 #PS1="$ANSI_WHITE┌─ $ANSI_LTBLU{ \w }$ANSI_WHITE"'$(parse_git_branch)'"\n$ANSI_WHITE└─ $ANSI_GREEN\u$ANSI_LTBLU@$ANSI_RED\h$ANSI_GREEN->$ANSI_WHITE$ $ANSI_CLR"
 
 PROMPT_COMMAND='__git_ps1 "$ANSI_WHITE┌─ $ANSI_LTBLU{ \w }$ANSI_CLR" "\n$ANSI_WHITE└─ $ANSI_GREEN\u$ANSI_LTBLU@$ANSI_RED\h$ANSI_GREEN->$ANSI_WHITE$ $ANSI_CLR"'
+PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
 
 # If this is an xterm set the title to user@host:dir
 #case "$TERM" in
