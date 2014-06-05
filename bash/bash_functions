@@ -5,6 +5,11 @@ bak()
     cp $1 "$1.bak"
 }
 
+ansistrip()
+{
+    sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" -i $1
+}
+
 mkcd()
 {
     mkdir $1 && cd $1
