@@ -1,4 +1,4 @@
-source '/home/daniel/.local/lib/python2.7/site-packages/powerline/bindings/tmux/powerline.conf'
+# source '/home/daniel/.local/lib/python3.4/site-packages/powerline/bindings/tmux/powerline.conf'
 
 # Set Esc-Wait off, so VIM works
 set -sg escape-time 0
@@ -8,11 +8,29 @@ set -g prefix C-a
 unbind C-b
 bind C-a send-prefix
 
+# Start numbering at 1
+set -g base-index 1
+
 # Key Bindings
-bind-key -n F5 select-window -t :-
-bind-key -n F6 select-window -t :+
-bind-key -n F7 select-pane -t :.-
-bind-key -n F8 select-pane -t :.+
+#bind-key -n F5 select-window -t :-
+#bind-key -n F6 select-window -t :+
+#bind-key -n F7 select-pane -t :.-
+#bind-key -n F8 select-pane -t :.+
+
+# Set status bar
+set -g status-bg black
+#set -g status-fg white
+#set -g status-left ""
+#set -g status-interval 1
+#set -g status-right-length 60
+#set -g status-right "#[fg=green]#(conky -c .conkyrc.tmux -i 1) "
+set -g pane-border-fg black
+set -g pane-active-border-fg black
+set -g status-left ''
+set -g status-right '#[bg=black]#[fg=yellow] #(whoami)@#(hostname) #[bg=black]#[fg=magenta] %R '
+set -g visual-activity on
+setw -g window-status-format '#[bg=red]#[fg=black] #I #[bg=black]#[fg=green] #W '
+setw -g window-status-current-format '#[bg=magenta]#[fg=black] #I #[bg=black]#[fg=yellow] #W '
 
 # Color Options
 #set -g status-bg colour234
