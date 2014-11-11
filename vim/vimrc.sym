@@ -63,6 +63,8 @@ nnoremap <silent> <C-l> :nohl<CR><C-l>
 "let g:DoxygenToolkit_versionString="0.1"
 let g:vim_jsom_syntax_conceal=0
 
+"""""""""""" puppet stuff
+au BufNewFile,BufRead *.pp,*.erb set ft=ruby
 """""""""""" c-like
 au BufNewFile,BufRead *.cu,*.def,*.go set ft=c
 autocmd BufRead,BufNewFile *.c,*.cpp,*.h,*.cu setlocal noexpandtab ts=4 sw=4

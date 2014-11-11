@@ -33,6 +33,11 @@ if [ -f "${HOME}/dotfiles/bash/bash_functions" ]; then
     source "${HOME}/dotfiles/bash/bash_functions"
 fi
 
+# Source private
+if [ -f "${HOME}/dotfiles/bash/bash_private" ]; then
+    source "${HOME}/dotfiles/bash/bash_private"
+fi
+
 # Source git completion functions
 if [ -f "${HOME}/dotfiles/bash/git-completion" ]; then
     source "${HOME}/dotfiles/bash/git-completion"
