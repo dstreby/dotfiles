@@ -39,7 +39,8 @@ filetype plugin indent on
 syntax on
 
 "colorscheme solarized
-colorscheme tomorrownight
+colorscheme hybrid
+"colorscheme tomorrownight
 "colorscheme tomorrownightbright
 "colorscheme molokai
 "let g:molokai_original = 1

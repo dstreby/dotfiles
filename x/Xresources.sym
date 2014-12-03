@@ -1,0 +1,177 @@
+URxvt*scrollBar:                      False
+URxvt*intensityStyles:                True
+URxvt*depth:                          32
+! URxvt*termName:                       string
+! URxvt*geometry:                       geometry
+! URxvt*chdir:                          string
+! URxvt*reverseVideo:                   boolean
+! URxvt*loginShell:                     boolean
+! URxvt*jumpScroll:                     boolean
+! URxvt*skipScroll:                     boolean
+! URxvt*pastableTabs:                   boolean
+! URxvt*scrollstyle:                    mode
+! URxvt*scrollBar_right:                boolean
+! URxvt*scrollBar_floating:             boolean
+! URxvt*scrollBar_align:                mode
+! URxvt*thickness:                      number
+! URxvt*scrollTtyOutput:                boolean
+! URxvt*scrollTtyKeypress:              boolean
+! URxvt*scrollWithBuffer:               boolean
+! URxvt*inheritPixmap:                  boolean
+! URxvt*transparent:                    boolean
+! URxvt*tintColor:                      color
+! URxvt*shading:                        number
+! URxvt*blurRadius:                     HxV
+! URxvt*fading:                         number
+! URxvt*fadeColor:                      color
+! URxvt*utmpInhibit:                    boolean
+! URxvt*urgentOnBell:                   boolean
+! URxvt*visualBell:                     boolean
+! URxvt*mapAlert:                       boolean
+! URxvt*meta8:                          boolean
+! URxvt*mouseWheelScrollPage:           boolean
+! URxvt*tripleclickwords:               boolean
+! URxvt*insecure:                       boolean
+! URxvt*cursorUnderline:                boolean
+! URxvt*cursorBlink:                    boolean
+! URxvt*pointerBlank:                   boolean
+! URxvt*colorBD:                        color
+! URxvt*colorIT:                        color
+! URxvt*colorUL:                        color
+! URxvt*colorRV:                        color
+! URxvt*underlineColor:                 color
+! URxvt*scrollColor:                    color
+! URxvt*troughColor:                    color
+! URxvt*highlightColor:                 color
+! URxvt*highlightTextColor:             color
+! URxvt*cursorColor:                    color
+! URxvt*cursorColor2:                   color
+! URxvt*pointerColor:                   color
+! URxvt*pointerColor2:                  color
+! URxvt*borderColor:                    color
+! URxvt*iconFile:                       file
+! URxvt*font:                           fontname
+! URxvt*boldFont:                       fontname
+! URxvt*italicFont:                     fontname
+! URxvt*boldItalicFont:                 fontname
+! URxvt*inputMethod:                    name
+! URxvt*preeditType:                    style
+! URxvt*imLocale:                       string
+! URxvt*imFont:                         fontname
+! URxvt*title:                          string
+! URxvt*iconName:                       string
+! URxvt*saveLines:                      number
+! URxvt*buffered:                       boolean
+! URxvt*visual:                         number
+! URxvt*transient-for:                  windowid
+! URxvt*override-redirect:              boolean
+! URxvt*hold:                           boolean
+! URxvt*externalBorder:                 number
+! URxvt*internalBorder:                 number
+! URxvt*borderLess:                     boolean
+! URxvt*lineSpace:                      number
+! URxvt*letterSpace:                    number
+! URxvt*skipBuiltinGlyphs:              boolean
+! URxvt*pointerBlankDelay:              number
+! URxvt*backspacekey:                   string
+! URxvt*deletekey:                      string
+! URxvt*print-pipe:                     string
+! URxvt*modifier:                       modifier
+! URxvt*cutchars:                       string
+! URxvt*answerbackString:               string
+! URxvt*secondaryScreen:                boolean
+! URxvt*secondaryScroll:                boolean
+! URxvt*perl-lib:                       string
+! URxvt*perl-eval:                      perl-eval
+! URxvt*perl-ext-common:                string
+! URxvt*perl-ext:                       string
+! URxvt*iso14755:                       boolean
+! URxvt*iso14755_52:                    boolean
+! URxvt*xrm:                            string
+! URxvt*keysym.sym:                     keysym
+! URxvt*background.border:              boolean
+! URxvt*background.expr:                string
+! URxvt*background.interval:            seconds
+! URxvt*bell-command:                   string
+! URxvt*matcher.button:                 string
+! URxvt*matcher.launcher:               string
+! URxvt*matcher.launcher.*:             string
+! URxvt*matcher.pattern.*:              string
+! URxvt*matcher.rend.*:                 string
+! URxvt*remote-clipboard.fetch:         string
+! URxvt*remote-clipboard.store:         string
+! URxvt*searchable-scrollback:          string
+! URxvt*selection-autotransform.*:      string
+! URxvt*selection-pastebin.cmd:         string
+! URxvt*selection-pastebin.url:         string
+! URxvt*selection.pattern-0:            string
+! URxvt*tab-bg:                         colour
+! URxvt*tab-fg:                         colour
+! URxvt*tabbar-bg:                      colour
+! URxvt*tabbar-fg:                      colour
+! URxvt*url-launcher:                   string
+
+*font: xft:Inconsolata for Powerline:pixelsize=13
+
+! ################ COLOR SCHEMES ################
+
+!TomorrowNight
+*.foreground:   #c5c8c6
+*.background:   [75]#0d1f21
+*.cursorColor:  #aeafad
+*.color0:       #000000
+*.color8:       #666666
+*.color1:       #cc6666
+*.color9:       #ff3334
+*.color2:       #b5bd68
+*.color10:      #9ec400
+*.color3:       #de935f
+*.color11:      #f0c674
+*.color4:       #81a2be
+*.color12:      #81a2be
+*.color5:       #b294bb
+*.color13:      #b777e0
+*.color6:       #8abeb7
+*.color14:      #54ced6
+*.color7:       #5c626b
+*.color15:      #282a2e
+
+!4-bit custom
+!*background: [75]#14283c
+!*foreground: #9ad9f9
+!*color0: #000000
+!*color8: #262626
+!*color1: #b57d97
+!*color9: #dabecb
+!*color2: #97b57d
+!*color10: #cbdabe
+!*color3: #b59b7d
+!*color11: #dacdbe
+!*color4: #7d97b5
+!*color12: #becbda
+!*color5: #9b7db5
+!*color13: #cdbeda
+!*color6: #7db59b
+!*color14: #bedacd
+!*color7: #d9d9d9
+!*color15: #ffffff
+
+! Molokai theme
+!*background: [75]#101010
+!*foreground: #d0d0d0
+!*color0: #101010
+!*color1: #960050
+!*color2: #66aa11
+!*color3: #c47f2c
+!*color4: #30309b
+!*color5: #7e40a5
+!*color6: #3579a8
+!*color7: #9999aa
+!*color8: #303030
+!*color9: #ff0090
+!*color10: #80ff00
+!*color11: #ffba68
+!*color12: #5f5fee
+!*color13: #bb88dd
+!*color14: #4eb4fa
+!*color15: #d0d0d0

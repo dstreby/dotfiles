@@ -62,6 +62,7 @@ alias sourceme='source ~/.bash_profile'
 alias pcat='pygmentize -f terminal256 -O style=monokai -g'
 alias cd=cd_func
 alias mknote='touch $(date +%Y%m%d).note'
+alias scavenge="free && sudo sh -c 'echo 3 >/proc/sys/vm/drop_caches' && free"
 
 # Special provisioning for ls++ aliasing
 alias ls='ls --color=tty'
