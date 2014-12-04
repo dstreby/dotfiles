@@ -231,3 +231,29 @@ cd_func ()
 
     return 0
 }
+
+# Function to traverse "up" filesystem from CWD
+# Credit to reddit user /u/spdqbr
+# http://www.reddit.com/r/commandline/comments/2o7rvh/linux_whats_a_good_alternative_to_stuff_like_cd/cmksmek
+function cdup {
+    newdir="${PWD/\/$1\/*/}/$1"
+    if [[ -d "$newdir" ]]
+    then
+        cd "$newdir"
+    else
+        echo "\"$newdir\" does not exist"
+    fi
+}
+
+function _cdup_complete {
+    local word=${COMP_WORDS[COMP_CWORD]}
+    local list=$(pwd | cut -c 2- | sed -e 's#/[^/]*$##g' -e 's/\([ ()]\)/\\\\\1/g')
+    IFS=/
+    list=$(compgen -W "$list" -- "$word")
+    IFS=$'\n'
+    COMPREPLY=($list)
+    return 0
+}
+
+complete -F _cdup_complete cdup
+
