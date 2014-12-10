@@ -55,9 +55,7 @@ if [ -f "${HOME}/dotfiles/bash/git-prompt" ]; then
 fi
 
 # Aliases:
-alias erxc='erxs -c'
 alias grep='grep --color=always'
-alias cl='clear'
 alias sourceme='source ~/.bash_profile'
 alias pcat='pygmentize -f terminal256 -O style=monokai -g'
 alias cd=cd_func
