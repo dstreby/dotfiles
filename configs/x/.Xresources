@@ -116,25 +116,25 @@ URxvt*depth:                          32
 ! ################ COLOR SCHEMES ################
 
 !TomorrowNight
-*.foreground:   #c5c8c6
-*.background:   [75]#0d1f21
-*.cursorColor:  #aeafad
-*.color0:       #000000
-*.color8:       #666666
-*.color1:       #cc6666
-*.color9:       #ff3334
-*.color2:       #b5bd68
-*.color10:      #9ec400
-*.color3:       #de935f
-*.color11:      #f0c674
-*.color4:       #81a2be
-*.color12:      #81a2be
-*.color5:       #b294bb
-*.color13:      #b777e0
-*.color6:       #8abeb7
-*.color14:      #54ced6
-*.color7:       #5c626b
-*.color15:      #282a2e
+!*.foreground:   #c5c8c6
+!*.background:   [75]#0d1f21
+!*.cursorColor:  #aeafad
+!*.color0:       #000000
+!*.color8:       #666666
+!*.color1:       #cc6666
+!*.color9:       #ff3334
+!*.color2:       #b5bd68
+!*.color10:      #9ec400
+!*.color3:       #de935f
+!*.color11:      #f0c674
+!*.color4:       #81a2be
+!*.color12:      #81a2be
+!*.color5:       #b294bb
+!*.color13:      #b777e0
+!*.color6:       #8abeb7
+!*.color14:      #54ced6
+!*.color7:       #5c626b
+!*.color15:      #282a2e
 
 !4-bit custom
 !*background: [75]#14283c
@@ -175,3 +175,26 @@ URxvt*depth:                          32
 !*color13: #bb88dd
 !*color14: #4eb4fa
 !*color15: #d0d0d0
+
+! Hybrid Terminal Colours. Uses the palette from Tomorrow-Night:
+! https://github.com/chriskempson/tomorrow-theme/blob/master/vim/colors/Tomorrow-Night.vim
+! vim: ft=xdefaults
+ 
+*background: [75]#1D1F21
+*foreground: #C5C8C6
+*color0: #282A2E
+*color1: #A54242
+*color2: #8C9440
+*color3: #DE935F
+*color4: #5F819D
+*color5: #85678F
+*color6: #5E8D87
+*color7: #707880
+*color8: #373B41
+*color9: #CC6666
+*color10: #B5BD68
+*color11: #F0C674
+*color12: #81A2BE
+*color13: #B294BB
+*color14: #8ABEB7
+*color15: #C5C8C6

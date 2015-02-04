@@ -19,7 +19,7 @@ export HISTIGNORE='ls:bg:fg:history'
 
 
 # Add dir_colors
-eval `dircolors $HOME/dotfiles/bash/dir_colors`
+eval `dircolors $HOME/.bash/dir_colors`
 
 # Add user defined dir to PATH
 export PATH=$PATH:$HOME/opt/bin:$HOME/.local/bin:/usr/java/latest/bin:
@@ -29,23 +29,23 @@ export GOPATH=$HOME/go
 export EDITOR=vim
 
 # Source bash functions
-if [ -f "${HOME}/dotfiles/bash/bash_functions" ]; then
-    source "${HOME}/dotfiles/bash/bash_functions"
+if [ -f "${HOME}/.bash/bash_functions" ]; then
+    source "${HOME}/.bash/bash_functions"
 fi
 
 # Source private
-if [ -f "${HOME}/dotfiles/bash/bash_private" ]; then
-    source "${HOME}/dotfiles/bash/bash_private"
+if [ -f "${HOME}/.bash/bash_private" ]; then
+    source "${HOME}/.bash/bash_private"
 fi
 
 # Source git completion functions
-if [ -f "${HOME}/dotfiles/bash/git-completion" ]; then
-    source "${HOME}/dotfiles/bash/git-completion"
+if [ -f "${HOME}/.bash/git-completion" ]; then
+    source "${HOME}/.bash/git-completion"
 fi
 
 # Source git prompt functions
-if [ -f "${HOME}/dotfiles/bash/git-prompt" ]; then
-    source "${HOME}/dotfiles/bash/git-prompt"
+if [ -f "${HOME}/.bash/git-prompt" ]; then
+    source "${HOME}/.bash/git-prompt"
     # Set options for the git PS1
     export GIT_PS1_SHOWDIRTYSTATE=1
     export GIT_PS1_SHOWSTASHSTATE=1
@@ -61,6 +61,7 @@ alias pcat='pygmentize -f terminal256 -O style=monokai -g'
 alias cd=cd_func
 alias mknote='touch $(date +%Y%m%d).note'
 alias scavenge="free && sudo sh -c 'echo 3 >/proc/sys/vm/drop_caches' && free"
+alias weechat-bitlbee="weechat -d ${HOME}/.weechat-xmpp"
 
 # Special provisioning for ls++ aliasing
 alias ls='ls --color=tty'
@@ -87,49 +88,3 @@ ANSI_CLR="\[\033[00m\]"
 
 PROMPT_COMMAND='__git_ps1 "$ANSI_WHITE┌─ $ANSI_LTBLU{ \w }$ANSI_CLR" "\n$ANSI_WHITE└─ $ANSI_GREEN\u$ANSI_LTBLU@$ANSI_RED\h$ANSI_GREEN->$ANSI_WHITE$ $ANSI_CLR"'
 PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
-
-# If this is an xterm set the title to user@host:dir
-#case "$TERM" in
-#    xterm*|rxvt*)
-#        PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD}\007"'
-#
-#        # Show the currently running command in the terminal title:
-#        # http://www.davidpashley.com/articles/xterm-titles-with-bash.html
-#        show_command_in_title_bar()
-#        {
-#            case "$BASH_COMMAND" in
-#                *\033]0*)
-#                    # The command is trying to set the title bar as well;
-#                    # this is most likely the execution of $PROMPT_COMMAND.
-#                    # In any case nested escapes confuse the terminal, so don't
-#                    # output them.
-#                    ;;
-#                *\033k*)
-#                    ;;
-#                *)
-#                    echo -ne "\033]0;${USER}@${HOSTNAME}: ${BASH_COMMAND}\007"
-#                    ;;
-#            esac
-#        }
-#        trap show_command_in_title_bar DEBUG
-#        ;;
-#    screen*)
-#        PROMPT_COMMAND='echo -ne "\033kbash\033\\"'
-#        set_screen_title()
-#        {
-#            case "$BASH_COMMAND" in
-#                *\033k*)
-#                    ;;
-#                *\033]0*)
-#                    ;;
-#                *)
-#                    #echo -ne "\033k$(echo ${BASH_COMMAND} | awk '{print $1;}')\033\\"
-#                    echo -ne "\033k FOOOOOO \033\\"
-#                    ;;
-#            esac
-#        }
-#        trap set_screen_title DEBUG
-#        ;;
-#    *)
-#        ;;
-#esac

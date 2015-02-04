@@ -1,3 +1,7 @@
 *.netrwhist
 *private
 .*.swp
+configs/bitlbee/
+configs/weechat/
+configs/weechat-xmpp/
+tmp/

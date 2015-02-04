@@ -1,0 +1,113 @@
+# conky configuration
+#
+# The list of variables has been removed from this file in favour
+# of keeping the documentation more maintainable.
+# Check http://conky.sf.net for an up-to-date-list.
+#
+# For ideas about how to modify conky, please see:
+# http://crunchbanglinux.org/forums/topic/59/my-conky-config/
+#
+# For help with conky, please see:
+# http://crunchbanglinux.org/forums/topic/2047/conky-help/
+#
+# Enjoy! :)
+##############################################
+# Settings
+##############################################
+background no
+use_xft yes
+xftfont Monospace:size=8
+xftalpha 1
+update_interval 1.0
+total_run_times 0
+own_window yes
+own_window_transparent yes
+own_window_type desktop
+own_window_argb_visual yes
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+double_buffer yes
+minimum_size 200 200
+maximum_width 190
+draw_shades no
+draw_outline no
+draw_border
+draw_graph_borders yes
+default_color white
+#default_color 03E5E5
+default_shade_color 1EA2C7
+default_outline_color white
+color3 979797
+color4 AntiqueWhite4
+gap_x 10
+gap_y 10
+no_buffers no
+alignment top_right
+uppercase no
+cpu_avg_samples 2
+override_utf8_locale no
+text_buffer_size 2048
+max_user_text 65000
+##############################################
+#  Output
+##############################################
+TEXT
+
+#Sector 1: "Date", Time, Date, Year
+${font monospace:bold:size=12}DATE ${hr 2}
+${font monospace:size=29}${alignc}${time %H:%M:%S}${font}
+
+
+${font monospace:bold:size=12}${alignc}${time %a | %d %b | Wk%V}
+
+${voffset 2}${alignc 7}${execpi 60 VinDSL_Cal= date +'${offset 6}%Y'}
+
+#Sector 2: "System", Kernel, Host_Name, Uptime
+${font monospace:bold:size=12}SYSTEM ${hr 2}
+${font monospace:normal:size=8}$sysname $kernel $alignr $machine
+Host:$alignr$nodename
+Uptime:$alignr$uptime
+
+#Sector 3: "Battery"
+#${font monospace:bold:size=12}Battery: $alignr ${battery}
+#${battery_bar BAT1}
+
+#Sector 4: "CPU"
+${font monospace:bold:size=12}AMD A8-3850 ${hr 2}
+${font monospace:normal:size=8}Core frequency $color $alignr ${freq_g (1)} GHz
+${font monospace:bold:size=8}${cpugraph cpu0 03E5E5 03E5E5}
+AVG ${cpu cpu0}% ${cpubar cpu0}
+${font monospace:normal:size=8}
+#Core 1 temp: $alignr ${hwmon 0 temp 1} C
+CPU1: ${cpu cpu1}% ${cpubar cpu1}
+CPU2: ${cpu cpu2}% ${cpubar cpu2}
+CPU3: ${cpu cpu3}% ${cpubar cpu3}
+CPU4: ${cpu cpu4}% ${cpubar cpu4}
+#${cpugraph cpu1}
+#${cpugraph cpu2}
+
+#Sector 5: "HDD & RAM", RAM use gauge, HDD use gauge
+${font monospace:bold:size=12}HDD & RAM ${hr 2}
+${font monospace:normal:size=8}RAM $alignc $mem / $memmax $alignr $memperc%
+$membar
+
+${font monospace:normal:size=8}HDD $alignc ${fs_used /} / ${fs_size /} $alignr ${fs_used_perc /}%
+${fs_bar /}
+
+#Sector 6: "Network", Wi-Fi ID, Signal, IP address, Upload/Download graph
+${font monospace:bold:size=12}NETWORK ${hr 2}
+#${font monospace:normal:size=8}ID:$alignr${wireless_essid wlan0}
+#Signal: $alignr ${wireless_link_qual_perc wlan0}%
+${font monospace:normal:size=8}
+IP address: $alignr ${addr enp2s0}
+${downspeedgraph enp2s0}
+${font monospace:normal:size=8}Down:   (Tot: ${totaldown enp2s0}) $alignr${downspeed enp2s0}/s
+#${upspeedgraph wlan0}
+${font monospace:normal:size=8}Up:       (Tot: ${totalup enp2s0}) $alignr ${upspeed enp2s0}/s
+
+#Sector 7: "Top Processes"
+${font monospace:bold:size=12}TOP PROCESSES ${hr 2}
+${font monospace:normal:size=8}${top_mem name 1}${alignr}${top mem 1} %
+${top_mem name 2}${alignr}${top mem 2} %
+$font${top_mem name 3}${alignr}${top mem 3} %
+$font${top_mem name 4}${alignr}${top mem 4} %
+#${execi 300 date +"%B %Y"}.

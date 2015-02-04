@@ -24,8 +24,8 @@
 # User dependent .bash_profile file
 
 # source the users bashrc if it exists
-if [ -f "${HOME}/dotfiles/bash/bashrc" ] ; then
-  source "${HOME}/dotfiles/bash/bashrc"
+if [ -f "${HOME}/.bash/bashrc" ] ; then
+  source "${HOME}/.bash/bashrc"
 elif [ -f "${HOME}/.bashrc" ] ; then
     source "${HOME}/.bashrc"
 fi
