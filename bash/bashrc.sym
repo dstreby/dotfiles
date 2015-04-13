@@ -22,7 +22,7 @@ export HISTIGNORE='ls:bg:fg:history'
 eval `dircolors $HOME/dotfiles/bash/dir_colors`
 
 # Add user defined dir to PATH
-export PATH=$PATH:$HOME/opt/bin:$HOME/.local/bin:/usr/java/latest/bin:
+export PATH=$PATH:$HOME/opt/bin:$HOME/.local/bin:/usr/java/latest/bin:$HOME/.gem/ruby/2.2.0/bin:
 export GOPATH=$HOME/go
 
 # Set the default EDITOR
@@ -61,6 +61,7 @@ alias pcat='pygmentize -f terminal256 -O style=monokai -g'
 alias cd=cd_func
 alias mknote='touch $(date +%Y%m%d).note'
 alias scavenge="free && sudo sh -c 'echo 3 >/proc/sys/vm/drop_caches' && free"
+alias weechat-bitlbee="weechat -d ${HOME}/.weechat-xmpp"
 
 # Special provisioning for ls++ aliasing
 alias ls='ls --color=tty'

@@ -14,6 +14,8 @@ set background=dark
 set encoding=utf-8
 set laststatus=2
 set guifont=Consolas\ for\ Powerline\ FixedD:h9
+set listchars=tab:▸\ ,trail:*,eol:¬,extends:❯,precedes:❮,nbsp:.
+set list
 set t_Co=256
 set wildmenu
 

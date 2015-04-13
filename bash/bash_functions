@@ -180,6 +180,23 @@ ageDay()
     echo $(( (`date +%s` - `date -d "$1" +%s`)/(3600*24) ));
 }
 
+sshp()
+{
+  list="${HOME}/.syncfiles"; [[ ! -f $list ]] && { ph "$list missing. Won't sync files."; nosync="true"; }
+  [[ $# -eq 0 ]] && { exit 1; }
+  host="$1"; shift; args="$@"
+  p=$(pwd)
+  if [ -z "$nosync" ]; then
+    cd "$HOME"
+    ct=`wc -l $list | awk '{ print $1 }'`
+    n=1
+    tar -cf - $(cat $list) | ssh "$host" 'tar -xf -' > /dev/null
+  fi
+  ssh "$host" "$args"
+  cd "$p"
+}
+
+
 # This function defines a 'cd' replacement function capable of keeping, 
 # displaying and accessing history of visited directories, up to 10 entries.
 # To use it, uncomment it, source this file and try 'cd --'.

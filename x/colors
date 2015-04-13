@@ -1,0 +1,216 @@
+! ################ COLOR SCHEMES ################
+*background: [75]#1D1F21
+*foreground: #C5C8C6
+
+!TomorrowNight
+!*.foreground:   #c5c8c6
+!*.background:   [75]#0d1f21
+!*.cursorColor:  #aeafad
+!*.color0:       #000000
+!*.color8:       #666666
+!*.color1:       #cc6666
+!*.color9:       #ff3334
+!*.color2:       #b5bd68
+!*.color10:      #9ec400
+!*.color3:       #de935f
+!*.color11:      #f0c674
+!*.color4:       #81a2be
+!*.color12:      #81a2be
+!*.color5:       #b294bb
+!*.color13:      #b777e0
+!*.color6:       #8abeb7
+!*.color14:      #54ced6
+!*.color7:       #5c626b
+!*.color15:      #282a2e
+
+!4-bit custom
+!*background: [75]#14283c
+!*foreground: #9ad9f9
+!*color0: #000000
+!*color8: #262626
+!*color1: #b57d97
+!*color9: #dabecb
+!*color2: #97b57d
+!*color10: #cbdabe
+!*color3: #b59b7d
+!*color11: #dacdbe
+!*color4: #7d97b5
+!*color12: #becbda
+!*color5: #9b7db5
+!*color13: #cdbeda
+!*color6: #7db59b
+!*color14: #bedacd
+!*color7: #d9d9d9
+!*color15: #ffffff
+
+! Molokai theme
+!*background: [75]#101010
+!*foreground: #d0d0d0
+!*color0: #101010
+!*color1: #960050
+!*color2: #66aa11
+!*color3: #c47f2c
+!*color4: #30309b
+!*color5: #7e40a5
+!*color6: #3579a8
+!*color7: #9999aa
+!*color8: #303030
+!*color9: #ff0090
+!*color10: #80ff00
+!*color11: #ffba68
+!*color12: #5f5fee
+!*color13: #bb88dd
+!*color14: #4eb4fa
+!*color15: #d0d0d0
+
+! Hybrid Terminal Colours. Uses the palette from Tomorrow-Night:
+! https://github.com/chriskempson/tomorrow-theme/blob/master/vim/colors/Tomorrow-Night.vim
+! vim: ft=xdefaults
+ 
+!*color0: #282A2E
+!*color1: #A54242
+!*color2: #8C9440
+!*color3: #DE935F
+!*color4: #5F819D
+!*color5: #85678F
+!*color6: #5E8D87
+!*color7: #707880
+!*color8: #373B41
+!*color9: #CC6666
+!*color10: #B5BD68
+!*color11: #F0C674
+!*color12: #81A2BE
+!*color13: #B294BB
+!*color14: #8ABEB7
+!*color15: #C5C8C6
+
+!s3r0 from https://github.com/z1lt0id/.Dotfiles/blob/master/.colors/s3r0
+*color0:#4A3637
+*color8:#4A3637
+*color1:#d17b49
+*color9:#d17b49
+*color2:#7b8748
+*color10:#7b8748
+*color3:#af865a
+*color11:#af865a
+*color4:#535C5C
+*color12:#535C5C
+*color5:#775759
+*color13:#775759
+*color6:#6d715e
+*color14:#6d715e
+*color7:#c0b18b
+*color15:#c0b18b
+
+!##################### BASE16 #######################
+
+!******* Atelier Lakeside ********
+!#define basebg [75]#161b1d
+!#define base00 #161b1d
+!#define base01 #1f292e
+!#define base02 #516d7b
+!#define base03 #5a7b8c
+!#define base04 #7195a8
+!#define base05 #7ea2b4
+!#define base06 #c1e4f6
+!#define base07 #ebf8ff
+!#define base08 #d22d72
+!#define base09 #935c25
+!#define base0A #8a8a0f
+!#define base0B #568c3b
+!#define base0C #2d8f6f
+!#define base0D #257fad
+!#define base0E #5d5db1
+!#define base0F #b72dd2
+
+!******* default-256-dark ********
+
+!#define basebg [75]#181818
+!#define base00 #181818
+!#define base01 #282828
+!#define base02 #383838
+!#define base03 #585858
+!#define base04 #b8b8b8
+!#define base05 #d8d8d8
+!#define base06 #e8e8e8
+!#define base07 #f8f8f8
+!#define base08 #ab4642
+!#define base09 #dc9656
+!#define base0A #f7ca88
+!#define base0B #a1b56c
+!#define base0C #86c1b9
+!#define base0D #7cafc2
+!#define base0E #ba8baf
+!#define base0F #a16946
+
+!****** Altelier Heath **********
+
+!#define basebg [75]#1b181b
+!#define base00 #1b181b
+!#define base01 #292329
+!#define base02 #695d69
+!#define base03 #776977
+!#define base04 #9e8f9e
+!#define base05 #ab9bab
+!#define base06 #d8cad8
+!#define base07 #f7f3f7
+!#define base08 #ca402b
+!#define base09 #a65926
+!#define base0A #bb8a35
+!#define base0B #379a37
+!#define base0C #159393
+!#define base0D #516aec
+!#define base0E #7b59c0
+!#define base0F #cc33cc
+
+!******* eighties **************
+
+!#define basebg [75]#2d2d2d
+!#define base00 #2d2d2d
+!#define base01 #393939
+!#define base02 #515151
+!#define base03 #747369
+!#define base04 #a09f93
+!#define base05 #d3d0c8
+!#define base06 #e8e6df
+!#define base07 #f2f0ec
+!#define base08 #f2777a
+!#define base09 #f99157
+!#define base0A #ffcc66
+!#define base0B #99cc99
+!#define base0C #66cccc
+!#define base0D #6699cc
+!#define base0E #cc99cc
+!#define base0F #d27b53
+!
+!!------ Assignments --------
+!*.foreground:   base05
+!*.background:   basebg
+!*.cursorColor:  base05
+!
+!*.color0:       base00
+!*.color1:       base08
+!*.color2:       base0B
+!*.color3:       base0A
+!*.color4:       base0D
+!*.color5:       base0E
+!*.color6:       base0C
+!*.color7:       base05
+!
+!*.color8:       base03
+!*.color9:       base08
+!*.color10:      base0B
+!*.color11:      base0A
+!*.color12:      base0D
+!*.color13:      base0E
+!*.color14:      base0C
+!*.color15:      base07
+!
+!! Note: colors beyond 15 might not be loaded (e.g., xterm, urxvt),
+!! use 'shell' template to set these if necessary
+!*.color16:      base09
+!*.color17:      base0F
+!*.color18:      base01
+!*.color19:      base02
+!*.color20:      base04
+!*.color21:      base06
