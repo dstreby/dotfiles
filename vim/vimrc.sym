@@ -74,9 +74,13 @@ autocmd BufRead,BufNewFile *.c,*.cpp,*.h,*.cu setlocal noexpandtab
 autocmd BufRead,BufNewFile *.c,*.cpp,*.h,*.cu setlocal cin noic noai nosmartindent
 autocmd BufRead,BufNewFile *.c,*.cpp,*.h,*.cu setlocal foldmethod=syntax
 """""""""""" python
-autocmd BufRead,BufNewFile *.py setlocal expandtab ts=4 sw=4
+autocmd BufRead,BufNewFile *.py setlocal expandtab ts=2 sw=2 softtabstop=2
 autocmd BufRead,BufNewFile *.py setlocal nocin noic ai nosmartindent
 autocmd BufRead,BufNewFile *.py setlocal foldmethod=indent
+"""""""""""" golang
+autocmd BufRead,BufNewFile *.go setlocal noexpandtab ts=2 sw=2 softtabstop=2
+autocmd BufRead,BufNewFile *.go setlocal nocin noic ai nosmartindent
+autocmd BufRead,BufNewFile *.go setlocal foldmethod=indent
 """""""""""" make
 autocmd BufRead,BufNewFile FileType make setlocal noexpandtab ts=4 sw=4
 autocmd BufRead,BufNewFile FileType make setlocal nocin noic ai nosmartindent
