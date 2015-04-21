@@ -86,7 +86,8 @@
 
 ! *********  https://raw.githubusercontent.com/phallus/arch-files/master/config/.Xdefaults ****
 *color15  : #66666a
-*color7  : #30303a
+*color7  : #838383
+!*color7  : #30303a
 *color1: #da637e
 *color9: #f0a3a3
 *color3: #ab93b9
