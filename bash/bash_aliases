@@ -1,0 +1,19 @@
+# vim: ft=sh
+
+alias grep='grep --color=always'
+alias sourceme='source ~/.bash_profile'
+alias pcat='pygmentize -f terminal256 -O style=monokai -g'
+alias mknote='touch $(date +%Y%m%d).note'
+alias scavenge="free && sudo sh -c 'echo 3 >/proc/sys/vm/drop_caches' && free"
+alias weechat-bitlbee="weechat -d ${HOME}/.weechat-xmpp"
+
+if [[ -z "$OSX" ]]; then
+  alias ls='ls --color=always'
+else
+  alias ls='ls -G'
+fi
+alias la='ls -lah'
+alias ll='ls -lh'
+alias lt='ls -lhtr'
+alias ld='ls -lhd */'
+

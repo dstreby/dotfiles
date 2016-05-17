@@ -2,6 +2,7 @@ execute pathogen#infect()
 
 set nocompatible
 set number
+set modeline
 set hlsearch
 set showmatch
 set incsearch

@@ -1,188 +1,68 @@
-# Functions
+# vim: ft=sh
 
-div-line()
+function div-line
 {
-    printf "%${2:-80}s\n" | tr " " "${1:--}"
+  printf "%${2:-80}s\n" | tr " " "${1:--}"
 }
 
-dick-line()
+function dick-line
 {
-    printf "8%${1:-80}sD\n" | tr " " "="
+  printf "8%${1:-80}sD\n" | tr " " "="
 }
 
-bak()
+function mkbak
 {
-    cp $1 "$1.bak"
+  local file=${1:?}
+  cp "$file" "${file}.bak"
 }
 
-cdl()
+function cdl
 {
-    cd $1
-    ls -l
+  cd $1 \
+    && ls -l
 }
 
-dig-all()
+function ansistrip
 {
-  dig +nocmd "$1" any +multiline +noall +answer
-}
-
-ansistrip()
-{
-    #sed -E "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" -i $1
+  if [[ -z "$OSX" ]]; then
+    sed -E "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" -i $1
+  else
     gsed -E "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" -i $1
+  fi
 }
 
-mkcd()
+function mkcd
 {
-    mkdir $1 && cd $1
+  local dir=${1:?}
+  mkdir -p "$dir" && cd "$dir"
 }
 
-scratch()
+function scratch
 {
-  D="${HOME}/scratch/$(date +%s)/"
-
-  mkdir -p $D && cd $D
+  local file="$(date +%s).scratch"
+  touch "$file"
+  vim "$file"
 }
 
-command_exists()
+function command_exists
 {
-    command -v "$1" >/dev/null 2>&1
+  command -v "${1:?}" >/dev/null 2>&1
 }
 
-s()
-{
-  echo mplayer -really-quiet "http://translate.google.com/translate_tts?tl=en\&q=$*" | \
-  sed 's/ /+/3g' | sh 2>/dev/null;
-}
-
-psdt()
+function psdt
 {
     if [ -z "$1" ]; then
         echo "Missing parameter. Usage: psdt {pid | name}"
         return 0
     fi
-    
+
     x=$1
     ps aux | awk -v search="$x" 'NR == 1; $0 ~ search' | grep -v awk
 
 }
 
-soap()
-{
-    if [ $# -lt 2 ]; then
-        echo "Missing parameter. Usage: soap {soap.xml} {url}"
-        return 0
-    fi
-    
-    curl -sk -H 'Content-Type: application/soap+xml;charset=UTF-8;action=urn:getStatus' -d @$1 -X POST $2 | \
-        sed -e 's/\s\{2,\}/ /g' | \
-        xmllint --format - | \
-        pygmentize -f terminal256 -l xml -O style=monokai
-
-}
-
-allgit()
-{
-	if [ -z "$1" ]
-	then
-		echo Checking all git repositories in Home Directory...
-		DIR=$HOME
-	elif [ "$1" == "." ]
-	then
-		echo Checking all git repositories in $PWD...
-		DIR=$1
-	else
-		echo Checking all git repositories in $1...
-		DIR=$1
-	fi
-
-	for REPO in $(find $DIR -name ".git" -type d 2>/dev/null); do
-	   WD=$(echo $REPO | awk -F/.git '{print $1}')
-	   echo "-------------------------------------------------------------"
-	   echo $WD | awk -v home="$HOME" '{ sub(home, "~"); print "Repository at: ", $0;}'
-	   git --git-dir=$REPO --work-tree=$WD status 2>/dev/null | \
-		 awk 'NR==1 {
-				branch = $4
-			}
-			NR==2 {
-				if($6=="clean)")printf("\t\033[0;32mBranch: \"%s\" is clean :)\033[0m\n",branch); 
-				else printf("\t\033[0;31mBranch: \"%s\" is Dirty :(\033[0m\n",branch);
-			}'
-	done
-}
-
-gitstrip()
-{
-    if [ -z "$1" ]
-    then
-        echo Requires file-name to strip
-        return 1
-    fi
-
-	BRANCH=$(git status 2>/dev/null | \
-		 awk 'NR==1 { print $4 }')
-
-    echo "Stripping file: $1" 
-    echo "From repo branch $BRANCH"
-    echo "Are you sure you'd like to continue? Y/N"
-  
-    read -s -n1 CONFIRM
-    if [[ "$CONFIRM" != "y" && "$CONFIRM" != "Y" ]]; then
-        echo "Exiting."
-        return 0
-    fi
-
-    echo "*********************************************"
-    
-    git filter-branch --force --index-filter \
-    "git rm --cached --ignore-unmatch $1" \
-    --prune-empty --tag-name-filter cat -- --all
-
-    echo "$1" >> .gitignore
-
-    git add .gitignore    
-    git commit -m "Added $1 to .gitignore"
-
-    echo "*********************************************"
-    echo "Push commit to remote using 'git push origin $BRANCH --force'"
-
-}
-
-passgen()
-{
-    if [ -z "$1" ]
-    then
-        echo Generating password with default length 16
-		LEN=16
-    else
-        echo Generating password with length $1
-		LEN=$1
-	fi
-    < /dev/urandom tr -dc [:graph:] | \
-		head -c$LEN | \
-		sed -e "s/.\(.\).\(.\).\(.*\)/$(< /dev/urandom tr -dc "0-9" | \
-		head -c1)\1$(< /dev/urandom tr -dc "a-z" | \
-		head -c1)\2$(< /dev/urandom tr -dc "A-Z" | \
-		head -c1)\3/"
-    echo 
-}
-
-parse_git_branch()
-{
-  git status 2>/dev/null | \
-    awk 'NR==1 {
-        branch = $4
-    } 
-    NR==2 {
-        if( $6=="clean" )
-            printf( "\033[00;32m  %s\033[0m\n", branch );
-        else
-            printf( "\033[00;31m  %s* \033[0m\n", branch );
-    }'
-}
-
 # Display all the colors / ANSI codes available to the term
-showcolors ()
+function showcolors
 {
     for x in 0 1 4 5 7 8; do 
         for i in `seq 30 37`; do 
@@ -197,34 +77,17 @@ showcolors ()
 
 # Show days passed since given date
 # Borrowed from kjsharke
-ageDay()
+function ageDay
 { 
     echo $(( (`date +%s` - `date -d "$1" +%s`)/(3600*24) ));
 }
-
-sshp()
-{
-  list="${HOME}/.syncfiles"; [[ ! -f $list ]] && { ph "$list missing. Won't sync files."; nosync="true"; }
-  [[ $# -eq 0 ]] && { exit 1; }
-  host="$1"; shift; args="$@"
-  p=$(pwd)
-  if [ -z "$nosync" ]; then
-    cd "$HOME"
-    ct=`wc -l $list | awk '{ print $1 }'`
-    n=1
-    tar -cf - $(cat $list) | ssh "$host" 'tar -xf -' > /dev/null
-  fi
-  ssh "$host" "$args"
-  cd "$p"
-}
-
 
 # This function defines a 'cd' replacement function capable of keeping, 
 # displaying and accessing history of visited directories, up to 10 entries.
 # To use it, uncomment it, source this file and try 'cd --'.
 # acd_func 1.0.5, 10-nov-2004
 # Petar Marinov, http:/geocities.com/h2428, this is public domain
-cd_func ()
+function cd_func
 {
     local x2 the_new_dir adir index
     local -i cnt
@@ -270,6 +133,7 @@ cd_func ()
 
     return 0
 }
+alias cd='cd_func'
 
 # Function to traverse "up" filesystem from CWD
 # Credit to reddit user /u/spdqbr
@@ -295,4 +159,3 @@ function _cdup_complete {
 }
 
 complete -F _cdup_complete cdup
-
