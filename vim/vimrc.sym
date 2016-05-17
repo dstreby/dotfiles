@@ -17,7 +17,21 @@ set guifont=Consolas\ for\ Powerline\ FixedD:h9
 set listchars=tab:▸\ ,trail:*,eol:¬,extends:❯,precedes:❮,nbsp:.
 set list
 set t_Co=256
+set ignorecase
+set ruler
+set relativenumber
+set autoread
+set nowrap
 set wildmenu
+syntax on
+
+filetype off
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'gmarik/Vundle.vim'
+Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim'}
+call vundle#end()
+filetype plugin indent on
 
 " Enable CursorLine
 set cursorline cursorcolumn
@@ -32,13 +46,6 @@ nnoremap <Leader>c :set cursorline! cursorcolumn!<CR>
 
 let g:Powerline_symbols="fancy"
 
-" Powerline
-set rtp+=/home/daniel/.local/lib/python3.4/site-packages/powerline/bindings/vim
-
-filetype plugin on
-filetype plugin indent on
-
-syntax on
 
 "colorscheme solarized
 colorscheme hybrid

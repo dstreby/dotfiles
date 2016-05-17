@@ -10,6 +10,7 @@ bind C-a send-prefix
 
 # Start numbering at 1
 set -g base-index 1
+set -g pane-base-index 1
 
 # Key Bindings
 bind-key -n F5 select-window -t :-
@@ -25,11 +26,19 @@ set -g status-bg black
 #set -g status-right-length 60
 #set -g status-right "#[fg=green]#(conky -c .conkyrc.tmux -i 1) "
 set -g pane-border-fg white
-set -g status-left ''
-set -g status-right '#[bg=black]#[fg=yellow] #(whoami)@#(hostname) #[bg=black]#[fg=magenta] %R '
+#set -g status-left ''
+#set -g status-right '#[bg=black]#[fg=yellow] #(whoami)@#(hostname) #[bg=black]#[fg=magenta] %R '
 set -g visual-activity on
 setw -g window-status-format '#[bg=red]#[fg=black] #I #[bg=black]#[fg=green] #W '
 setw -g window-status-current-format '#[bg=magenta]#[fg=black] #I #[bg=black]#[fg=yellow] #W '
+
+set -g status on
+set -g status-interval 2
+set -g status-justify "centre"
+set -g status-left-length 90
+set -g status-right-length 90
+set -g status-left "#(~/dotfiles/tmux/tmux-powerline/powerline.sh left)"
+set -g status-right "#(~/dotfiles/tmux/tmux-powerline/powerline.sh right)"
 
 # Color Options
 #set -g status-bg colour234
@@ -43,7 +52,8 @@ setw -g window-status-current-format '#[bg=magenta]#[fg=black] #I #[bg=black]#[f
 # Options
 set -g default-terminal "screen-256color"
 set -g status-utf8 on
-set -g base-index 1
+set -g allow-rename off
+set -g display-panes-time 8000
 
 # Activity
 setw -g monitor-activity on

@@ -1,13 +1,35 @@
 # Functions
 
+div-line()
+{
+    printf "%${2:-80}s\n" | tr " " "${1:--}"
+}
+
+dick-line()
+{
+    printf "8%${1:-80}sD\n" | tr " " "="
+}
+
 bak()
 {
     cp $1 "$1.bak"
 }
 
+cdl()
+{
+    cd $1
+    ls -l
+}
+
+dig-all()
+{
+  dig +nocmd "$1" any +multiline +noall +answer
+}
+
 ansistrip()
 {
-    sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" -i $1
+    #sed -E "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" -i $1
+    gsed -E "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" -i $1
 }
 
 mkcd()

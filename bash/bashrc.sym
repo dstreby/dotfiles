@@ -1,12 +1,15 @@
 # If not running interactively, don't do anything
 [[ "$-" != *i* ]] && return
 
-# Check color support, and set appropriate TERM
-#if [ "$COLORTERM" == "gnome-terminal" ] || [ "$COLORTERM" == "xfce4-terminal" ]; then
-#    TERM=xterm-256color
-#elif [ "$COLORTERM" == "rxvt-xpm" ]; then
-#    TERM=rxvt-256color
-#fi
+# Source bash functions
+if [ -f "${HOME}/dotfiles/bash/bash_functions" ]; then
+    source "${HOME}/dotfiles/bash/bash_functions"
+fi
+
+# Source private
+if [ -f "${HOME}/dotfiles/bash/bash_private" ]; then
+    source "${HOME}/dotfiles/bash/bash_private"
+fi
 
 # Bash history settings
 shopt -s histappend
@@ -19,7 +22,9 @@ export HISTIGNORE='ls:bg:fg:history'
 
 
 # Add dir_colors
-eval `dircolors $HOME/dotfiles/bash/dir_colors`
+if command_exists dircolors; then
+  eval $(dircolors $HOME/dotfiles/bash/dir_colors)
+fi
 
 # Add user defined dir to PATH
 export PATH=$PATH:$HOME/opt/bin:$HOME/.local/bin:/usr/java/latest/bin:$HOME/.gem/ruby/2.2.0/bin:
@@ -28,15 +33,6 @@ export GOPATH=$HOME/go
 # Set the default EDITOR
 export EDITOR=vim
 
-# Source bash functions
-if [ -f "${HOME}/dotfiles/bash/bash_functions" ]; then
-    source "${HOME}/dotfiles/bash/bash_functions"
-fi
-
-# Source private
-if [ -f "${HOME}/dotfiles/bash/bash_private" ]; then
-    source "${HOME}/dotfiles/bash/bash_private"
-fi
 
 # Source git completion functions
 if [ -f "${HOME}/dotfiles/bash/git-completion" ]; then
@@ -64,7 +60,7 @@ alias scavenge="free && sudo sh -c 'echo 3 >/proc/sys/vm/drop_caches' && free"
 alias weechat-bitlbee="weechat -d ${HOME}/.weechat-xmpp"
 
 # Special provisioning for ls++ aliasing
-alias ls='ls --color=tty'
+alias ls='ls -G'
 if command_exists ls++; then
     alias ll='ls++ --potsf'
     alias lt='ls++ --potsf -tr'
@@ -73,64 +69,43 @@ else
     alias la='ls -lah'
     alias ll='ls -lh'
     alias lt='ls -lhtr'
+    alias ld='ls -lhd */'
 fi
     
+function __prompt_command() {
+  local last_exit="$?"
+  history -a
+  # ANSI Escape codes:
+  local ANSI_reset="\[\033[00m\]"
+  local ANSI_white="\[\033[00;37m\]"
+  local ANSI_light_blue="\[\033[00;34m\]"
+  local ANSI_green="\[\033[00;32m\]"
+  local ANSI_red="\[\033[00;31m\]"
+  local ANSI_white_on_red="\[\033[00;37;41m\]"
 
-# ANSI Escape codes:
-ANSI_WHITE="\[\033[00;37m\]"
-ANSI_LTBLU="\[\033[00;34m\]"
-ANSI_GREEN="\[\033[00;32m\]"
-ANSI_RED="\[\033[00;31m\]"
-ANSI_CLR="\[\033[00m\]"
+  # Determine if we're connected via SSH to set host color in prompt
+  if [[ -n $SSH_CONNECTION ]]; then
+    local prompt_host="${ANSI_white_on_red}\h${ANSI_reset}"
+  else
+    local prompt_host="${ANSI_red}\h${ANSI_reset}"
+  fi
 
-# Bash Prompt:
-#PS1="$ANSI_WHITE┌─ $ANSI_LTBLU{ \w }$ANSI_WHITE"'$(parse_git_branch)'"\n$ANSI_WHITE└─ $ANSI_GREEN\u$ANSI_LTBLU@$ANSI_RED\h$ANSI_GREEN->$ANSI_WHITE$ $ANSI_CLR"
+  # Show the exit code of last command
+  if [[ $last_exit -ne 0 ]]; then
+    local prompt_status=" ${ANSI_white}[${ANSI_red} ✘ (${last_exit}) ${ANSI_white}] "
+  else
+    local prompt_status=" ${ANSI_white}[${ANSI_green} ✔ ${ANSI_white}] "
+  fi
 
-PROMPT_COMMAND='__git_ps1 "$ANSI_WHITE┌─ $ANSI_LTBLU{ \w }$ANSI_CLR" "\n$ANSI_WHITE└─ $ANSI_GREEN\u$ANSI_LTBLU@$ANSI_RED\h$ANSI_GREEN->$ANSI_WHITE$ $ANSI_CLR"'
-PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
+  # Build the prompt string:
+  PS_TOP="${ANSI_light_blue}{ \w }${ANSI_reset}"
+  PS_BOT="\n${ANSI_green}\u${ANSI_light_blue}@${prompt_host}${prompt_status}${ANSI_white}$ ${ANSI_reset}"
+}
 
-# If this is an xterm set the title to user@host:dir
-#case "$TERM" in
-#    xterm*|rxvt*)
-#        PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD}\007"'
-#
-#        # Show the currently running command in the terminal title:
-#        # http://www.davidpashley.com/articles/xterm-titles-with-bash.html
-#        show_command_in_title_bar()
-#        {
-#            case "$BASH_COMMAND" in
-#                *\033]0*)
-#                    # The command is trying to set the title bar as well;
-#                    # this is most likely the execution of $PROMPT_COMMAND.
-#                    # In any case nested escapes confuse the terminal, so don't
-#                    # output them.
-#                    ;;
-#                *\033k*)
-#                    ;;
-#                *)
-#                    echo -ne "\033]0;${USER}@${HOSTNAME}: ${BASH_COMMAND}\007"
-#                    ;;
-#            esac
-#        }
-#        trap show_command_in_title_bar DEBUG
-#        ;;
-#    screen*)
-#        PROMPT_COMMAND='echo -ne "\033kbash\033\\"'
-#        set_screen_title()
-#        {
-#            case "$BASH_COMMAND" in
-#                *\033k*)
-#                    ;;
-#                *\033]0*)
-#                    ;;
-#                *)
-#                    #echo -ne "\033k$(echo ${BASH_COMMAND} | awk '{print $1;}')\033\\"
-#                    echo -ne "\033k FOOOOOO \033\\"
-#                    ;;
-#            esac
-#        }
-#        trap set_screen_title DEBUG
-#        ;;
-#    *)
-#        ;;
-#esac
+PROMPT_COMMAND='__prompt_command; __git_ps1 "$PS_TOP" "$PS_BOT"'
+
+PATH="/Users/dstreby/perl5/bin${PATH+:}${PATH}"; export PATH;
+PERL5LIB="/Users/dstreby/perl5/lib/perl5${PERL5LIB+:}${PERL5LIB}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/Users/dstreby/perl5${PERL_LOCAL_LIB_ROOT+:}${PERL_LOCAL_LIB_ROOT}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/Users/dstreby/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/Users/dstreby/perl5"; export PERL_MM_OPT;
