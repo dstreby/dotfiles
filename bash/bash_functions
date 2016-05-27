@@ -1,5 +1,11 @@
 # vim: ft=sh
 
+function aws-keypair-fingerprint
+{
+  openssl pkcs8 -in "${1:?}" -nocrypt -topk8 -outform DER \
+    | openssl sha1 -c
+}
+
 function div-line
 {
   printf "%${2:-80}s\n" | tr " " "${1:--}"
