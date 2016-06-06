@@ -63,13 +63,14 @@ function  __prompt_command
   local ANSI_light_blue="\[\033[00;34m\]"
   local ANSI_green="\[\033[00;32m\]"
   local ANSI_red="\[\033[00;31m\]"
+  local ANSI_purple="\[\033[00;35m\]"
   local ANSI_white_on_red="\[\033[00;37;41m\]"
 
   # Determine if we're connected via SSH to set host color in prompt
-  if [[ -n $SSH_CONNECTION ]]; then
-    local prompt_host="${ANSI_white_on_red}\h${ANSI_reset}"
-  else
+  if [[ -z ${SSH_CONNECTION+x} ]]; then
     local prompt_host="${ANSI_red}\h${ANSI_reset}"
+  else
+    local prompt_host="${ANSI_white_on_red}\h${ANSI_reset}"
   fi
 
   # Show the exit code of last command
@@ -79,8 +80,15 @@ function  __prompt_command
     local prompt_status=" ${ANSI_white}[${ANSI_green} ✔ ${ANSI_white}] "
   fi
 
+  # Determine if a python virtual env is set
+  if [[ -z ${VIRTUAL_ENV+x} ]]; then
+    local prompt_venv=''
+  else
+    local prompt_venv=" ${ANSI_purple}[${VIRTUAL_ENV##*/}]${ANSI_reset}"
+  fi
+
   # Build the prompt string:
-  PS_TOP="${ANSI_light_blue}{ \w }${ANSI_reset}"
+  PS_TOP="${ANSI_light_blue}{ \w }${ANSI_reset}${prompt_venv}"
   PS_BOT="\n${ANSI_green}\u${ANSI_light_blue}@${prompt_host}${prompt_status}${ANSI_white}$ ${ANSI_reset}"
 }
 
