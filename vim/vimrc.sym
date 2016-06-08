@@ -24,6 +24,7 @@ set relativenumber
 set autoread
 set nowrap
 set wildmenu
+set printoptions=paper:letter,duplex:off,number:y
 syntax on
 
 filetype off
