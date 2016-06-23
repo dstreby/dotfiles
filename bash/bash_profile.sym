@@ -6,6 +6,9 @@ if [[ "$(uname -s)" == "Darwin" ]]; then
   export OSX=1
 fi
 
+# Add home bin dir to path
+export PATH="${HOME}/bin:${PATH}"
+
 # source the users bashrc if it exists
 if [ -f "${HOME}/dotfiles/bash/bashrc" ] ; then
   source "${HOME}/dotfiles/bash/bashrc"
