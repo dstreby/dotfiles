@@ -2,6 +2,7 @@
 " Vim Settings
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set nocompatible
+set clipboard^=unnamed
 set number
 set modeline
 set hlsearch
@@ -45,9 +46,14 @@ autocmd InsertLeave * highlight  CursorColumn ctermbg=234
 nnoremap <Leader>c :set cursorline! cursorcolumn!<CR>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Mappings
+" Mappings / Commands
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let mapleader=","
+let maplocalleader=","
 nnoremap <silent> <C-l> :nohl<CR><C-l>
+nnoremap <Tab> :bnext<CR>
+nnoremap <S-Tab> :bprevious<CR>
+command Bd bp|bd # " Close buffer without killing split
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugins via vim-plug
