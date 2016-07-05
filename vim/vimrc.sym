@@ -65,14 +65,18 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.vim/plugged')
+" Core
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
-Plug 'scrooloose/nerdtree'
-Plug 'airblade/vim-gitgutter'
 Plug 'vim-scripts/kwbdi.vim'
+" Utilities
+Plug 'airblade/vim-gitgutter'
+Plug 'scrooloose/nerdtree'
+" Language specific
+Plug 'hashivim/vim-terraform', {'for': 'terraform'}
 call plug#end()
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
