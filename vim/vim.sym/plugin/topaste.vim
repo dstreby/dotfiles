@@ -15,7 +15,7 @@ function TOpaste(line1, line2)
   colorscheme default
   execute a:line1 . "," . a:line2 . "TOhtml" | exec "w ".tmp_file | exec "q!"
   execute "colorscheme ".current_color
-  let res = system('~/vim_snip.sh '.name." ".tmp_file)
+  let res = system('vim-snip '.name." ".tmp_file)
   " exec "topleft 2new"
   " call append(0, tmp_file)
 endfunction
