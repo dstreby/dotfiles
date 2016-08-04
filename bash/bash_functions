@@ -1,5 +1,13 @@
 # vim: ft=sh
 
+#TODO: This is sloppy and not super portable. It works for now,
+# but should definitely be cleaned up. At least add linux compat.
+function clc
+{
+  tail -n1 "$HISTFILE" \
+    | tee >(pbcopy)
+}
+
 function aws-keypair-fingerprint
 {
   openssl pkcs8 -in "${1:?}" -nocrypt -topk8 -outform DER \
