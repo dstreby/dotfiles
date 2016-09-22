@@ -18,3 +18,8 @@ alias ll='ls -lh'
 alias lt='ls -lhtr'
 alias ld='ls -lhd */'
 
+# OSX Specific stuff
+if [[ -n "$OSX" ]]; then
+  alias postgres_start="pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start"
+  alias postgres_stop="pg_ctl -D /usr/local/var/postgres stop -s -m fast"
+fi

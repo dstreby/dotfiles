@@ -54,6 +54,7 @@ nnoremap <silent> <C-l> :nohl<CR><C-l>
 nnoremap <Tab> :bnext<CR>
 nnoremap <S-Tab> :bprevious<CR>
 command Bd bp|bd # " Close buffer without killing split
+command FormatJSON %!python -m json.tool
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugins via vim-plug
