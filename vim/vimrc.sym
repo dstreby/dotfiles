@@ -30,7 +30,8 @@ set viminfo+=n$HOME/.history/viminfo
 set backspace=indent,eol,start
 
 syntax on
-colorscheme hybrid
+"colorscheme hybrid
+colorscheme gruvbox
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Enable CursorLine

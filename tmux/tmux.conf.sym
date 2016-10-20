@@ -37,9 +37,11 @@ set -g status-right "#(~/dotfiles/tmux/tmux-powerline/powerline.sh right)"
 
 # Options
 set -g default-terminal "screen-256color"
+set -g history-limit 5000
 set -g status-utf8 on
 set -g allow-rename off
 set -g display-panes-time 8000
+set -g renumber-windows on
 
 # Activity
 setw -g monitor-activity on
