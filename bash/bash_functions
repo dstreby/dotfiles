@@ -1,4 +1,21 @@
 # vim: ft=sh
+function kcsc
+{
+  local context=${1}
+  if [[ -z "$context" ]]; then
+    kubectl config get-contexts
+  else
+    kubectl config use-context ${context}
+  fi
+}
+
+function kcns
+{
+  local namespace=${1:?}
+  local context=$(kubectl config current-context)
+  echo "Setting context ${context} to namespace ${namespace}..."
+  kubectl config set-context ${context} --namespace ${namespace}
+}
 
 #TODO: This is sloppy and not super portable. It works for now,
 # but should definitely be cleaned up. At least add linux compat.
