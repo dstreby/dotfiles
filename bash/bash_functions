@@ -1,4 +1,6 @@
 # vim: ft=sh
+
+# Quickly display / switch kubenernetes contexts
 function kcsc
 {
   local context=${1}
@@ -9,12 +11,17 @@ function kcsc
   fi
 }
 
+# Quickly display / switch kubenernetes namespaces
 function kcns
 {
-  local namespace=${1:?}
-  local context=$(kubectl config current-context)
-  echo "Setting context ${context} to namespace ${namespace}..."
-  kubectl config set-context ${context} --namespace ${namespace}
+  local namespace=${1}
+  if [[ -z "$namespace" ]]; then
+    kubectl get ns
+  else
+    local context=$(kubectl config current-context)
+    echo "Setting context ${context} to namespace ${namespace}..."
+    kubectl config set-context ${context} --namespace ${namespace}
+  fi
 }
 
 #TODO: This is sloppy and not super portable. It works for now,
