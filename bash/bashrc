@@ -95,8 +95,8 @@ function  __prompt_command
   fi
 
   # Build the prompt string:
-  PS_TOP="${ANSI_light_blue}{ \w }${ANSI_reset}${prompt_venv}${prompt_aws}"
-  PS_BOT="\n${ANSI_green}\u${ANSI_light_blue}@${prompt_host}${prompt_status}${ANSI_white}$ ${ANSI_reset}"
+  PS_PRE_GIT="${ANSI_light_blue}{ \w }${ANSI_reset}"
+  PS_POST_GIT="${prompt_venv}${prompt_aws}\n${ANSI_green}\u${ANSI_light_blue}@${prompt_host}${prompt_status}${ANSI_white}$ ${ANSI_reset}"
 }
 
-PROMPT_COMMAND='__prompt_command; declare -F __git_ps1 &>/dev/null && __git_ps1 "$PS_TOP" "$PS_BOT"'
+PROMPT_COMMAND='__prompt_command; declare -F __git_ps1 &>/dev/null && __git_ps1 "$PS_PRE_GIT" "$PS_POST_GIT"'
