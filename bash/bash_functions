@@ -24,6 +24,36 @@ function kcns
   fi
 }
 
+# Get the WAN IPs of all nodes in a kubernetes cluster
+# TODO: This is dirty, and not portable, clean it up.
+function kube-nodes
+{
+  local nodes=$(kubectl get nodes | grep -E 'Ready[^,]' \
+    | cut -d ' ' -f 1)
+
+  for node in $nodes; do
+    local node_wan=$(kubectl describe node/${node} \
+      | awk -F, '/Addresses:/ {print $NF}')
+
+    echo "$node - $node_wan"
+  done
+}
+
+# Use all resources in given file as Terraform resource targets
+function terraform-target-file
+{
+  if [[ "$#" -ne 2 ]]; then
+    echo "Requires two arguments: action target-file"
+    return 1
+  fi
+
+  local action=${1:?}
+  local target=${2:?}
+
+  local resources=$(awk '/^resource/ { gsub(/"/, ""); printf "--target=%s.%s ", $2, $3 }' <"${target}")
+  terraform $action $resources
+}
+
 #TODO: This is sloppy and not super portable. It works for now,
 # but should definitely be cleaned up. At least add linux compat.
 function clc

@@ -75,20 +75,27 @@ function  __prompt_command
 
   # Show the exit code of last command
   if [[ $last_exit -ne 0 ]]; then
-    local prompt_status=" ${ANSI_white}[${ANSI_red} ✘ (${last_exit}) ${ANSI_white}] "
+    local prompt_status=" ${ANSI_white}[${ANSI_red}${last_exit}${ANSI_white}]${ANSI_reset} "
   else
-    local prompt_status=" ${ANSI_white}[${ANSI_green} ✔ ${ANSI_white}] "
+    local prompt_status=" ${ANSI_white}[${ANSI_green}✔${ANSI_white}]${ANSI_reset} "
   fi
 
   # Determine if a python virtual env is set
   if [[ -z ${VIRTUAL_ENV+x} ]]; then
     local prompt_venv=''
   else
-    local prompt_venv=" ${ANSI_purple}[${VIRTUAL_ENV##*/}]${ANSI_reset}"
+    local prompt_venv=" ${ANSI_purple}[py:${VIRTUAL_ENV##*/}]${ANSI_reset}"
+  fi
+
+  # Show current AWS environment (if set)
+  if [[ -z ${AWS_DEFAULT_PROFILE+x} ]]; then
+    local prompt_aws=''
+  else
+    local prompt_aws=" ${ANSI_purple}[aws:${AWS_DEFAULT_PROFILE}]${ANSI_reset}"
   fi
 
   # Build the prompt string:
-  PS_TOP="${ANSI_light_blue}{ \w }${ANSI_reset}${prompt_venv}"
+  PS_TOP="${ANSI_light_blue}{ \w }${ANSI_reset}${prompt_venv}${prompt_aws}"
   PS_BOT="\n${ANSI_green}\u${ANSI_light_blue}@${prompt_host}${prompt_status}${ANSI_white}$ ${ANSI_reset}"
 }
 
