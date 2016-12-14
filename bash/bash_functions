@@ -39,6 +39,21 @@ function kube-nodes
   done
 }
 
+# Grab a shell / execute a comand on a running pod
+function kube-shell
+{
+  local pod=${1:?}
+  shift
+
+  local cols=$(tput cols)
+  local lines=$(tput lines)
+  local term='xterm'
+  local cmd=$@
+  cmd=${cmd:-bash}
+
+  kubectl exec -it $pod -- env COLUMNS=$cols LINES=$lines TERM=$term "$cmd"
+}
+
 # Use all resources in given file as Terraform resource targets
 function terraform-target-file
 {
