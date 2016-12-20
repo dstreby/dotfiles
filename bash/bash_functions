@@ -45,13 +45,20 @@ function kube-shell
   local pod=${1:?}
   shift
 
+  # Some lazy argument parsing to see if a container is specified
+  if  [[ "$1" == "-c" ]]; then
+    shift
+    local container=" -c ${1:?}"
+    shift
+  fi
+
   local cols=$(tput cols)
   local lines=$(tput lines)
   local term='xterm'
   local cmd=$@
   cmd=${cmd:-bash}
 
-  kubectl exec -it $pod -- env COLUMNS=$cols LINES=$lines TERM=$term "$cmd"
+  kubectl exec -it $pod $container -- env COLUMNS=$cols LINES=$lines TERM=$term "$cmd"
 }
 
 # Use all resources in given file as Terraform resource targets
@@ -66,7 +73,8 @@ function terraform-target-file
   local target=${2:?}
 
   local resources=$(awk '/^resource/ { gsub(/"/, ""); printf "--target=%s.%s ", $2, $3 }' <"${target}")
-  terraform $action $resources
+  echo -e "Running:\nterraform $action --refresh=true ${resources}\n\n"
+  terraform $action --refresh=true $resources
 }
 
 #TODO: This is sloppy and not super portable. It works for now,
