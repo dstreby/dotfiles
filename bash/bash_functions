@@ -39,6 +39,16 @@ function kube-nodes
   done
 }
 
+# Get WAN IP of node for given pod
+function kube-pod-wan
+{
+  local pod=${1:?}
+  local node=$(kubectl describe po ${pod} \
+    |awk '/^Node:/ { split($NF, node, "/"); print node[1] }')
+  kubectl describe node ${node} \
+  | awk -F',' '/^Addresses:/ {print $NF}'
+}
+
 # Grab a shell / execute a comand on a running pod
 function kube-shell
 {
