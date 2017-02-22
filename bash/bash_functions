@@ -24,6 +24,15 @@ function kcns
   fi
 }
 
+function _kcns_complete {
+    local word=${COMP_WORDS[COMP_CWORD]}
+    local list=$(kubectl get ns | awk 'NR!=1 {print $1}')
+    list=$(compgen -W "$list" -- "$word")
+    COMPREPLY=($list)
+    return 0
+}
+complete -F _kcns_complete kcns
+
 # Get the WAN IPs of all nodes in a kubernetes cluster
 # TODO: This is dirty, and not portable, clean it up.
 function kube-nodes
@@ -252,9 +261,10 @@ function cdup {
 function _cdup_complete {
     local word=${COMP_WORDS[COMP_CWORD]}
     local list=$(pwd | cut -c 2- | sed -e 's#/[^/]*$##g' -e 's/\([ ()]\)/\\\\\1/g')
+    _IFS="$IFS"
     IFS=/
     list=$(compgen -W "$list" -- "$word")
-    IFS=$'\n'
+    IFS="$_IFS"
     COMPREPLY=($list)
     return 0
 }
