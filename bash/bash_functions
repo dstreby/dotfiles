@@ -96,6 +96,43 @@ function terraform-target-file
   terraform $action --refresh=true $resources
 }
 
+#### AWS related functions ####
+# Get private IP owner
+function aws-private-ip-search
+{
+  if [[ "$#" -lt 1 ]]; then
+    echo "Usage: ${FUNCNAME} elb-name [region]"
+    echo 'aws --region=${region} ec2 describe-network-interfaces --filters "Name=addresses.private-ip-address,Values=${ip}"'
+    return 1
+  fi
+
+  local ip=${1:?}
+  local region=${2:-us-west-2}
+
+  aws --region=${region} ec2 describe-network-interfaces --filters "Name=addresses.private-ip-address,Values=${ip}" \
+    | grep 'Description'
+}
+
+# Get the private IP addresses for internet facing ELB
+function aws-elb-private-ip
+{
+  if [[ "$#" -lt 1 ]]; then
+    echo "Usage: ${FUNCNAME} elb-name [region]"
+    echo 'aws --region=\${region} ec2 describe-network-interfaces --filters "Name=description,Values=ELB ${elb}"'
+    return 1
+  fi
+
+  local elb=${1:?}
+  local region=${2:-us-west-2}
+
+  # Some laziness to use jq if it's available, else use grep
+  command -v "jq" >/dev/null 2>&1 \
+    && (aws --region=${region} ec2 describe-network-interfaces --filters "Name=description,Values=ELB ${elb}" \
+      | jq ".NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress") \
+    || (aws --region=${region} ec2 describe-network-interfaces --filters "Name=description,Values=ELB ${elb}" \
+      | grep '\"PrivateIpAddress\":')
+}
+
 #TODO: This is sloppy and not super portable. It works for now,
 # but should definitely be cleaned up. At least add linux compat.
 function clc
