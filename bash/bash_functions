@@ -11,6 +11,15 @@ function kcsc
   fi
 }
 
+function _kcsc_complete {
+    local word=${COMP_WORDS[COMP_CWORD]}
+    local list=$(kubectl config get-contexts --no-headers | tr -d '\*' | awk '{print $1}')
+    list=$(compgen -W "$list" -- "$word")
+    COMPREPLY=($list)
+    return 0
+}
+complete -F _kcsc_complete kcsc
+
 # Quickly display / switch kubenernetes namespaces
 function kcns
 {
@@ -26,7 +35,7 @@ function kcns
 
 function _kcns_complete {
     local word=${COMP_WORDS[COMP_CWORD]}
-    local list=$(kubectl get ns | awk 'NR!=1 {print $1}')
+    local list=$(kubectl get ns --no-headers | awk '{print $1}')
     list=$(compgen -W "$list" -- "$word")
     COMPREPLY=($list)
     return 0
@@ -133,18 +142,19 @@ function aws-elb-private-ip
       | grep '\"PrivateIpAddress\":')
 }
 
+# Get the fingerprint of an AWS private key
+function aws-keypair-fingerprint
+{
+  openssl pkcs8 -in "${1:?}" -nocrypt -topk8 -outform DER \
+    | openssl sha1 -c
+}
+
 #TODO: This is sloppy and not super portable. It works for now,
 # but should definitely be cleaned up. At least add linux compat.
 function clc
 {
   tail -n1 "$HISTFILE" \
     | tee >(pbcopy)
-}
-
-function aws-keypair-fingerprint
-{
-  openssl pkcs8 -in "${1:?}" -nocrypt -topk8 -outform DER \
-    | openssl sha1 -c
 }
 
 function div-line
@@ -220,6 +230,14 @@ function showcolors
         done
     done
     echo ""
+}
+
+function tv-static
+{
+  P=(' ' █ ░ ▒ ▓)
+  while :
+    do printf "\e[$[RANDOM%LINES+1];$[RANDOM%COLUMNS+1]f${P[$RANDOM%5]}"
+  done
 }
 
 # Show days passed since given date
