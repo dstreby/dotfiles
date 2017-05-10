@@ -1,5 +1,6 @@
 # vim: ft=sh
 
+#### Kubernetes functions ####
 # Quickly display / switch kubernetes contexts
 function kcsc
 {
@@ -42,29 +43,57 @@ function _kcns_complete {
 }
 complete -F _kcns_complete kcns
 
-# Get the WAN IPs of all nodes in a kubernetes cluster
-# TODO: This is dirty, and not portable, clean it up.
+# Finds the WAN IP of a given kubernetes node
+function kube-node-wan
+{
+  local node=${1:?}
+  kubectl describe node/${node} \
+    | awk '/Addresses/ {
+        split($2, ips, ",");
+        for (i in ips) {
+          if ( match(ips[i], /(192\.168|10\.|172\.1[6789]\.|172\.2[0-9]\.|172\.3[01]\.)/) == 0 ) {
+            print ips[i]
+          }
+        }
+      }'
+}
+
+# Lists all kubernetes worker nodes and their WAN IP
 function kube-nodes
 {
-  local nodes=$(kubectl get nodes | grep -E 'Ready[^,]' \
-    | cut -d ' ' -f 1)
+  local nodes=$(kubectl get nodes --no-headers \
+    | grep -v 'SchedulingDisabled' \
+    | cut -d ' ' -f 1
+  )
 
   for node in $nodes; do
-    local node_wan=$(kubectl describe node/${node} \
-      | awk -F, '/Addresses:/ {print $NF}')
+    local node_wan=$(kube-node-wan ${node})
 
     echo "$node - $node_wan"
   done
 }
 
-# Get WAN IP of node for given pod
+# Returns the WAN IP for the node on which a given pod is running
 function kube-pod-wan
 {
   local pod=${1:?}
   local node=$(kubectl describe po ${pod} \
     |awk '/^Node:/ { split($NF, node, "/"); print node[1] }')
-  kubectl describe node ${node} \
-  | awk -F',' '/^Addresses:/ {print $NF}'
+
+  kube-node-wan $node
+}
+
+# A quick and dirty way to show the resource availability in a kube cluster
+#TODO: This should be re-written and expanded
+function kube-capacity {
+  local nodes=$(kubectl get no --no-headers | awk '$0 !~ /Disabled/ {print $1}')
+  for node in $nodes; do
+    echo -n "Node ${node} - "
+    kubectl describe no $node \
+      | grep -A4 'Allocated resources' \
+      | tail -n1 \
+      | awk '{print "CPU Requests " $1 " " $2 " Memory Requests: " $5 " " $6}'
+  done
 }
 
 # Grab a shell / execute a comand on a running pod
@@ -89,6 +118,7 @@ function kube-shell
   kubectl exec -it $pod $container -- env COLUMNS=$cols LINES=$lines TERM=$term "$cmd"
 }
 
+#### Terraform functions ####
 # Use all resources in given file as Terraform resource targets
 function terraform-target-file
 {
@@ -155,6 +185,22 @@ function clc
 {
   tail -n1 "$HISTFILE" \
     | tee >(pbcopy)
+}
+
+function die
+{
+  local frame=0
+  while caller $frame; do
+    ((frame++));
+  done
+
+  local format="$1"
+  shift
+  tput setaf 1
+  printf >&2 "$format\n" "$@"
+  tput sgr0
+
+  return 1
 }
 
 function div-line
@@ -238,6 +284,20 @@ function tv-static
   while :
     do printf "\e[$[RANDOM%LINES+1];$[RANDOM%COLUMNS+1]f${P[$RANDOM%5]}"
   done
+}
+
+function weather
+{
+  # We require 'curl' so check for it
+  if ! command -v curl &>/dev/null; then
+    printf "%s\n" "[ERROR] weather: This command requires 'curl', please install it."
+    return 1
+  fi
+
+  # If no arg is given, default to New York, NY
+  (curl -sm 10 "http://wttr.in/${*:-NewYork}" 2>/dev/null \
+    | grep -v 'New feature\|Follow') \
+    || printf "%s\n" "[ERROR] weather: Could not connect to weather service."
 }
 
 # Show days passed since given date
