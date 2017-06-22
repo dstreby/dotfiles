@@ -136,6 +136,19 @@ function terraform-target-file
 }
 
 #### AWS related functions ####
+# Get ACM Certificate ARN(s)
+function aws-cert-arn
+{
+  local search_string=${1}
+  if [[ -z "$search_string" ]]; then
+    aws acm list-certificates \
+      | jq '.CertificateSummaryList|sort_by(.DomainName)'
+  else
+    aws acm list-certificates \
+      | jq --arg search_string "$search_string" '.CertificateSummaryList[]|select(.DomainName | contains($search_string))'
+  fi
+}
+
 # Get private IP owner
 function aws-private-ip-search
 {
