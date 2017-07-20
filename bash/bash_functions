@@ -313,6 +313,47 @@ function weather
     || printf "%s\n" "[ERROR] weather: Could not connect to weather service."
 }
 
+# Simple stock price function
+function ticker
+{
+  stock=${1:-aapl}
+  url="http://download.finance.yahoo.com/d/quotes.csv?s=${stock}&f=l1cl"
+
+  # We require 'curl' so check for it
+  if ! command -v curl &>/dev/null; then
+    printf "%s\n" "[ERROR] weather: This command requires 'curl', please install it."
+    return 1
+  fi
+
+  ## Because bash on OSX apparently doesn't support case substitutions
+  ## we'll waste a variable and a few cycles to get the stock symbol in uppercase
+  stock_up=$(echo "$stock" | tr '[:lower:]' '[:upper:]')
+
+  quote=$(curl -s "$url")
+  quote=$(echo "$quote" \
+    | tr '\",' ' ' \
+    | tr -s ' '
+  )
+  read -ra quote_arr <<< "$quote"
+
+  ## Figure out if the change is positive or negative
+  if [ "${quote_arr[1]:0:1}" == "+" ]; then
+    change_color="\033[00;32m"
+  elif [ "${quote_arr[1]:0:1}" == "-" ]; then
+    change_color="\033[00;31m"
+  else
+    change_color="\033[00m"
+  fi
+
+  if command -v figlet &>/dev/null; then
+    echo "${quote_arr[0]}" | figlet -k
+  else
+    echo "${quote_arr[0]}"
+  fi
+  echo -e "${stock_up} ${change_color}${quote_arr[1]} [ ${quote_arr[3]} ]\033[00m"
+  echo "$(date "+%Y-%m-%d") ${quote_arr[4]}"
+}
+
 # Show days passed since given date
 # Borrowed from kjsharke
 function ageDay
