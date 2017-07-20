@@ -314,6 +314,7 @@ function weather
 }
 
 # Simple stock price function
+# takes one positional arg for stock symbol
 function ticker
 {
   stock=${1:-aapl}
@@ -353,6 +354,7 @@ function ticker
   echo -e "${stock_up} ${change_color}${quote_arr[1]} [ ${quote_arr[3]} ]\033[00m"
   echo "$(date "+%Y-%m-%d") ${quote_arr[4]}"
 }
+export -f ticker
 
 # Show days passed since given date
 # Borrowed from kjsharke
