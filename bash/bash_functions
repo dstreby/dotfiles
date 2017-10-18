@@ -118,6 +118,24 @@ function kube-shell
   kubectl exec -it $pod $container -- env COLUMNS=$cols LINES=$lines TERM=$term "$cmd"
 }
 
+# Decode and list all key/value pairs in a Kubernetes secret
+function kube-extract-secrets
+{
+  local secret=${1:?}
+
+  # lazy argument parsing to see if namespace is specified
+  if [ -z ${2+x} ]; then
+    local namespace=''
+  else
+    local namespace=" --namespace=${2}"
+  fi
+
+  KUBE_EDITOR="cat" kubectl $namespace edit secret/${secret} -o json 2>/dev/null \
+    | jq -r '.data | keys[] as $k | "\($k), \(.[$k])"' \
+    | awk '{gsub(",","=",$1); printf "%s", $1; system("echo "$2 " | base64 --decode"); printf "\n"}' \
+    | sed '/^$/d'
+}
+
 #### Terraform functions ####
 # Use all resources in given file as Terraform resource targets
 function terraform-target-file
@@ -275,6 +293,16 @@ function psdt
     x=$1
     ps aux | awk -v search="$x" 'NR == 1; $0 ~ search' | grep -v awk
 
+}
+
+# Function to cat a file, and evaluate all variables in file
+function cat-eval
+{
+    declare file="${1:?}"
+    declare data=$(< "$file")
+    declare delimiter="__apply_shell_expansion_delimiter__"
+    declare command="cat <<$delimiter"$'\n'"$data"$'\n'"$delimiter"
+    eval "$command"
 }
 
 # Display all the colors / ANSI codes available to the term
