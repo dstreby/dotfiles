@@ -29,6 +29,8 @@ set printoptions=paper:letter,duplex:off,number:y
 set viminfo+=n$HOME/.history/viminfo
 set backspace=indent,eol,start
 set hidden
+" clear PAGER so Man works when Vim is set as the Man PAGER (see bashrc)
+let $PAGER=''
 
 syntax on
 "colorscheme hybrid
@@ -81,6 +83,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'scrooloose/nerdtree'
 Plug 'sjl/gundo.vim'
 " Language specific
+Plug 'WolfgangMehner/c-support'
 Plug 'hashivim/vim-terraform', {'for': 'terraform'}
 Plug 'elixir-lang/vim-elixir', {'for': 'elixir'}
 call plug#end()

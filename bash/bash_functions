@@ -48,18 +48,11 @@ function kube-node-wan
 {
   local node=${1:?}
   kubectl describe node/${node} \
-    | awk '/Addresses/ {
-        split($2, ips, ",");
-        for (i in ips) {
-          if ( match(ips[i], /(192\.168|10\.|172\.1[6789]\.|172\.2[0-9]\.|172\.3[01]\.)/) == 0 ) {
-            print ips[i]
-          }
-        }
-      }'
+    | awk '/ExternalDNS:/ { print $2}'
 }
 
 # Lists all kubernetes worker nodes and their WAN IP
-function kube-nodes
+function kube-workers
 {
   local nodes=$(kubectl get nodes --no-headers \
     | grep -v 'SchedulingDisabled' \
@@ -85,7 +78,8 @@ function kube-pod-wan
 
 # A quick and dirty way to show the resource availability in a kube cluster
 #TODO: This should be re-written and expanded
-function kube-capacity {
+function kube-capacity
+{
   local nodes=$(kubectl get no --no-headers | awk '$0 !~ /Disabled/ {print $1}')
   for node in $nodes; do
     echo -n "Node ${node} - "
@@ -93,6 +87,22 @@ function kube-capacity {
       | grep -A4 'Allocated resources' \
       | tail -n1 \
       | awk '{print "CPU Requests " $1 " " $2 " Memory Requests: " $5 " " $6}'
+  done
+}
+
+# Find pods which have duplicates on the same node
+#TODO: This is really gross, rewrite it
+function kube-duplicates
+{
+  for node in $(kc get no --no-headers | grep -v SchedulingDisabled | awk '{print $1}'); do
+    echo ${node}; kubectl describe node ${node} \
+      | sed '/Non-terminated/,/Allocated/!d' \
+      | sed \$d | tail -n +4 \
+      | grep -v 'kube-system' \
+      | awk '{print $2}' \
+      | rev | cut -d- -f3-| rev \
+      | sort | uniq -c \
+      | grep --color=always -E ' [2-9][0-9]* |$'
   done
 }
 
@@ -271,6 +281,26 @@ function ansistrip
   fi
 }
 
+# Function to convert video (most formats work) to gif
+# two args: input-video and output-gif
+# requires ffmpeg and imagemagick
+function vid-to-gif
+{
+  # Check dependencies
+  if ! command -v 'ffmpeg' >/dev/null 2>&1; then
+    (>&2 echo "This function requires 'ffmpeg', please install it.")
+    exit 1
+  fi
+
+  if ! command -v 'convert' >/dev/null 2>&1; then
+    (>&2 echo "This function requires 'imagemagick', please install it.")
+    exit 1
+  fi
+
+  ffmpeg -i "${1:?}" -vf scale=800:-1 -r 10 -f image2pipe -vcodec ppm - \
+    | convert -delay 5 -layers Optimize -loop 0 - "${2:?}"
+}
+
 function mkcd
 {
   local dir=${1:?}
@@ -309,6 +339,15 @@ function cat-eval
     declare delimiter="__apply_shell_expansion_delimiter__"
     declare command="cat <<$delimiter"$'\n'"$data"$'\n'"$delimiter"
     eval "$command"
+}
+
+function simple-stats
+{
+  tr -d '[a-z,A-Z,:]' \
+    | tr ' ' '\n' \
+    | sed '/^$/d' \
+    | datamash --header-out min 1 max 1 mean 1 median 1 \
+    | column -t
 }
 
 # Display all the colors / ANSI codes available to the term
