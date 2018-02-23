@@ -7,7 +7,7 @@ alias mknote='touch $(date +%Y%m%d).note'
 alias scavenge="free && sudo sh -c 'echo 3 >/proc/sys/vm/drop_caches' && free"
 alias cidr_sort="sort -n -t . -k 1,1 -k 2,2 -k 3,3 -k 4,4"
 alias kc='kubectl'
-alias watch_twou='watch -tcn30 ticker twou'
+alias aws-login='eval $(aws-env -p dstreby-2u)'
 
 if [[ -z "$OSX" ]]; then
   alias ls='ls --color=always'
