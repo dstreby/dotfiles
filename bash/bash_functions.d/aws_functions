@@ -1,0 +1,75 @@
+# vim: ft=sh
+
+#### AWS related functions ####
+
+# Get total EBS volume usage
+function aws-ebs-usage
+{
+  if [[ "$#" -lt 1 ]]; then
+    echo "Usage: ${FUNCNAME} [gp2 | io1 | st1 | sc1 | standard] [region]"
+    return 1
+  fi
+
+  local type=${1:?}
+  local region=${2:-us-west-2}
+
+  aws --region=${region} ec2 describe-volumes --filters Name=volume-type,Values=${type} \
+    | jq '.Volumes[].Size' \
+    | awk '{sum+=$1} END {print sum/1024 " TiB"}'
+}
+
+# Get ACM Certificate ARN(s)
+function aws-cert-arn
+{
+  local search_string=${1}
+  if [[ -z "$search_string" ]]; then
+    aws acm list-certificates \
+      | jq '.CertificateSummaryList|sort_by(.DomainName)'
+  else
+    aws acm list-certificates \
+      | jq --arg search_string "$search_string" '.CertificateSummaryList[]|select(.DomainName | contains($search_string))'
+  fi
+}
+
+# Get private IP owner
+function aws-private-ip-search
+{
+  if [[ "$#" -lt 1 ]]; then
+    echo "Usage: ${FUNCNAME} elb-name [region]"
+    echo 'aws --region=${region} ec2 describe-network-interfaces --filters "Name=addresses.private-ip-address,Values=${ip}"'
+    return 1
+  fi
+
+  local ip=${1:?}
+  local region=${2:-us-west-2}
+
+  aws --region=${region} ec2 describe-network-interfaces --filters "Name=addresses.private-ip-address,Values=${ip}" \
+    | grep 'Description'
+}
+
+# Get the private IP addresses for internet facing ELB
+function aws-elb-private-ip
+{
+  if [[ "$#" -lt 1 ]]; then
+    echo "Usage: ${FUNCNAME} elb-name [region]"
+    echo 'aws --region=\${region} ec2 describe-network-interfaces --filters "Name=description,Values=ELB ${elb}"'
+    return 1
+  fi
+
+  local elb=${1:?}
+  local region=${2:-us-west-2}
+
+  # Some laziness to use jq if it's available, else use grep
+  command -v "jq" >/dev/null 2>&1 \
+    && (aws --region=${region} ec2 describe-network-interfaces --filters "Name=description,Values=ELB ${elb}" \
+      | jq ".NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress") \
+    || (aws --region=${region} ec2 describe-network-interfaces --filters "Name=description,Values=ELB ${elb}" \
+      | grep '\"PrivateIpAddress\":')
+}
+
+# Get the fingerprint of an AWS private key
+function aws-keypair-fingerprint
+{
+  openssl pkcs8 -in "${1:?}" -nocrypt -topk8 -outform DER \
+    | openssl sha1 -c
+}
