@@ -25,6 +25,7 @@ set relativenumber
 set autoread
 set nowrap
 set wildmenu
+set foldcolumn=2
 set printoptions=paper:letter,duplex:off,number:y
 set viminfo+=n$HOME/.history/viminfo
 set backspace=indent,eol,start
@@ -77,7 +78,6 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-scripts/kwbdi.vim'
-"Plug 'Yggdroot/indentLine'
 " Utilities
 Plug 'airblade/vim-gitgutter'
 Plug 'scrooloose/nerdtree'
@@ -86,6 +86,8 @@ Plug 'sjl/gundo.vim'
 Plug 'WolfgangMehner/c-support'
 Plug 'hashivim/vim-terraform', {'for': 'terraform'}
 Plug 'elixir-lang/vim-elixir', {'for': 'elixir'}
+Plug 'mustache/vim-mustache-handlebars', {'for': 'mustache'}
+Plug 'vim-scripts/AnsiEsc.vim', {'for': 'man'}
 call plug#end()
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

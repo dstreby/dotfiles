@@ -73,3 +73,11 @@ function aws-keypair-fingerprint
   openssl pkcs8 -in "${1:?}" -nocrypt -topk8 -outform DER \
     | openssl sha1 -c
 }
+
+# Get all IAM users in a group
+function aws-get-group-users
+{
+  aws iam get-group --group-name ${1:?} \
+    | jq -r '.Users[].UserName' \
+    | sort | uniq
+}

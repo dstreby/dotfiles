@@ -6,7 +6,20 @@ if [ -d "${HOME}/dotfiles/bash/bash_functions.d" ]; then
     source $file
   done
 fi
+### OpenSSL functions ###
+function ssl-get-site-cert
+{
+  local domain=${1:?}
+  echo \
+    | openssl s_client -showcerts -servername ${domain} -connect ${domain}:443 2>/dev/null \
+    | openssl x509 -inform pem -noout -text
+}
 
+function ssl-check-csr-file
+{
+  local csr=${1:?}
+  openssl req -text -noout -in ${csr}
+}
 #### Terraform functions ####
 # Use all resources in given file as Terraform resource targets
 function terraform-target-file

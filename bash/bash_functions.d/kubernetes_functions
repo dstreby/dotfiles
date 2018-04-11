@@ -1,6 +1,12 @@
 # vim: ft=sh
 
 #### Kubernetes functions ####
+# Load kubectl autocomplete
+#if [[ -z "$OSX" ]]; then
+#  source <(kubectl completion bash)
+#else
+#  kubectl completion bash > $(brew --prefix)/etc/bash_completion.d/kubectl
+#fi
 
 # Quickly display / switch kubernetes contexts
 function kcsc
@@ -220,4 +226,13 @@ function kube-quotas
     | awk '{ if ( $1 ~ "m" ) { gsub("m",""); print $1/1000 } else { print } }' \
     | gpaste -sd+ \
     | bc
+}
+
+# Show deployments which are missing pods
+function kube-missing-pods
+{
+  kubectl get deploy --all-namespaces \
+    | awk 'NR == 1 {print $0 " DIFF"}; NR > 1 {diff=$6-$3; print $0 "\t" diff}' \
+    | grep --color=never -e '[^0]$' \
+    | column -t
 }

@@ -21,6 +21,13 @@ if [[ -z "$OSX" ]]; then
   eval $(dircolors $HOME/dotfiles/bash/dir_colors)
 fi
 
+# Add bash-completion (OS-X only, see brew bash-completion)
+if [[ "$OSX" == "1" ]]; then
+  if [ -f /usr/local/share/bash-completion/bash_completion ]; then
+    . /usr/local/share/bash-completion/bash_completion
+  fi
+fi
+
 # Source git completion functions
 if [ -f "${HOME}/dotfiles/bash/git-completion" ]; then
     source "${HOME}/dotfiles/bash/git-completion"
