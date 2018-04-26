@@ -16,7 +16,17 @@ elif [ -f "${HOME}/.bashrc" ] ; then
     source "${HOME}/.bashrc"
 fi
 
-# Add SSH id_dsa to the keychain (Linux only)
+# Linux Only ******************************************************************
 if [[ -z "$OSX" ]]; then
+  # Add SSH id_dsa to keychain
   eval $(keychain --eval --agents ssh -Q --quiet id_dsa)
 fi
+# /Linux Only *****************************************************************
+
+# OS-X Only *******************************************************************
+if [[ "$OSX" -eq 1 ]]; then
+  # Add the brew installed openssl binaries to the PATH (Mac only)
+  [[ -d "/usr/local/opt/openssl/bin" ]] \
+   && export PATH="/usr/local/opt/openssl/bin:$PATH"
+fi
+# /OS-X Only ******************************************************************
