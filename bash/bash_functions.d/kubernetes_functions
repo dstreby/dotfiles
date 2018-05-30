@@ -236,3 +236,22 @@ function kube-missing-pods
     | grep --color=never -e '[^0]$' \
     | column -t
 }
+
+# Get all RoleBindings and ClusterRoleBindings for a user / group / serviceaccount
+function kube-get-roles
+{
+  local user="${1}"
+
+  kubectl get rolebinding,clusterrolebinding --all-namespaces -o json \
+    | jq -r "
+      .items[]
+      | select(.subjects[]?
+        | select(.name == \"${user}\"
+        )
+      )
+      | .roleRef.kind + \"/\" + .roleRef.name + \" \" +
+        (if .metadata.namespace | length > 0
+        then \" (namespace: \" + .metadata.namespace + \")\"
+        else \"\" end)
+    "
+}

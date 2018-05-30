@@ -8,7 +8,10 @@ alias scavenge="free && sudo sh -c 'echo 3 >/proc/sys/vm/drop_caches' && free"
 alias cidr_sort="sort -n -t . -k 1,1 -k 2,2 -k 3,3 -k 4,4"
 alias kc='kubectl'
 alias tf='terraform'
+alias vault-login='vault login -method aws'
+alias kube-login='k8s-login'
 alias aws-login='eval $(aws-env -p dstreby-2u)'
+alias aws-ecr-login='eval $(aws ecr get-login --no-include-email --region us-west-2)'
 
 if [[ -z "$OSX" ]]; then
   alias ls='ls --color=always'
