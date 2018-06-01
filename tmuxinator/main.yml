@@ -1,0 +1,25 @@
+# ~/.tmuxinator/main.yml
+
+name: main
+root: ~/
+pre: eval $(aws-env -p dstreby-2u)
+startup_window: primary
+attach: true
+
+windows:
+  - primary:
+      layout: b645,370x114,0,0{185x114,0,0,8,184x114,186,0[184x57,186,0,9,184x56,186,58,10]}
+      panes:
+        - 
+        - 
+        - 
+  - secondary:
+      layout: main-vertical
+      panes:
+        - 
+        - 
+  - tertiary:
+      layout: main-vertical
+      panes:
+        - 
+        - 

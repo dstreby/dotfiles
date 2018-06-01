@@ -1,0 +1,45 @@
+# ~/.tmuxinator/daily.yml
+
+name: vert
+root: ~/
+
+# Optional tmux socket
+# socket_name: foo
+
+# Runs before everything. Use it to start daemons etc.
+# pre: sudo /etc/rc.d/mysqld start
+
+# Runs in each window and pane before window/pane specific commands. Useful for setting up interpreter versions.
+# pre_window: rbenv shell 2.0.0-p247
+
+# Pass command line options to tmux. Useful for specifying a different tmux.conf.
+# tmux_options: -f ~/.tmux.mac.conf
+
+# Change the command to call tmux.  This can be used by derivatives/wrappers like byobu.
+# tmux_command: byobu
+
+# Specifies (by name or index) which window will be selected on project startup. If not set, the first window is used.
+# startup_window: logs
+
+# Controls whether the tmux session should be attached to automatically. Defaults to true.
+# attach: false
+
+# Runs after everything. Use it to attach to tmux with custom options etc.
+# post: tmux -CC attach -t daily
+
+windows:
+  - primary:
+      layout: 6561,238x212,0,0[239x52,0,0{120x52,0,0[120x26,0,0,123,120x25,0,27,131],118x52,121,0[118x26,121,0,125,118x25,121,27,126]},239x88,0,53,127,239x70,0,142,128]
+      panes:
+        - 
+        - 
+        - units
+        - calc
+        - 
+        - 
+  - personal:
+      layout: 010f,238x212,0,0[238x39,0,0,42,238x86,0,40,48,238x85,0,127,49]
+      panes:
+        - 
+        - 
+        - 
