@@ -2,7 +2,6 @@
 
 name: main
 root: ~/
-pre: eval $(aws-env -p dstreby-2u)
 startup_window: primary
 attach: true
 
