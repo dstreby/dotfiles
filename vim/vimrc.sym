@@ -82,6 +82,7 @@ Plug 'vim-scripts/kwbdi.vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'scrooloose/nerdtree'
 Plug 'sjl/gundo.vim'
+Plug 'diepm/vim-rest-console'
 " Language specific
 Plug 'WolfgangMehner/c-support'
 Plug 'hashivim/vim-terraform', {'for': 'terraform'}

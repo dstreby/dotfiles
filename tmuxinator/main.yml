@@ -4,6 +4,7 @@ name: main
 root: ~/
 startup_window: primary
 attach: true
+on_project_start: aws-login
 
 windows:
   - primary:

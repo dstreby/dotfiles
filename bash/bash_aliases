@@ -1,8 +1,7 @@
 # vim: ft=sh
 
-alias grep='grep --color=always'
 alias sourceme='source ~/.bash_profile'
-alias pcat='pygmentize -f terminal256 -O style=monokai -g'
+alias grep='grep --color=always'
 alias mknote='touch $(date +%Y%m%d).note'
 alias scavenge="free && sudo sh -c 'echo 3 >/proc/sys/vm/drop_caches' && free"
 alias cidr_sort="sort -n -t . -k 1,1 -k 2,2 -k 3,3 -k 4,4"

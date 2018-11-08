@@ -31,6 +31,14 @@ function aws-cert-arn
   fi
 }
 
+# Find IAM server-certificate by name
+function aws-iam-cert-search
+{
+  local search_string=${1:?}
+  aws iam list-server-certificates \
+    | jq --arg search_string "$search_string" '.ServerCertificateMetadataList[]|select(.Path | contains($search_string))'
+}
+
 # Get private IP owner
 function aws-private-ip-search
 {

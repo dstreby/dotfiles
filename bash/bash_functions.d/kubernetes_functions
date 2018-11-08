@@ -50,6 +50,14 @@ function _kcns_complete {
 }
 complete -F _kcns_complete kcns
 
+# Display formatted current context information
+function kube-current-context
+{
+  kubectl config get-contexts --no-headers \
+    | awk '/^\*/ {print "CLUSTER: " $3 "\nAUTHINFO: " $4 "\nNAMESPACE: " $5}' \
+    | column -t
+}
+
 # Finds the WAN IP of a given kubernetes node
 function kube-node-wan
 {
