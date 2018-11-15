@@ -115,18 +115,14 @@ function kube-docker-ps
     | column -t | sort | cat -n
 }
 
-# A quick and dirty way to show the resource availability in a kube cluster
-#TODO: This should be re-written and expanded
-function kube-capacity
+# Get a count, by type, of all workers in the cluster
+function kube-worker-count
 {
-  local nodes=$(kubectl get no --no-headers | awk '$0 !~ /Disabled/ {print $1}')
-  for node in $nodes; do
-    echo -n "Node ${node} - "
-    kubectl describe no $node \
-      | grep -A4 'Allocated resources' \
-      | tail -n1 \
-      | awk '{print "CPU Requests " $1 " " $2 " Memory Requests: " $5 " " $6}'
-  done
+  kubectl get nodes --show-labels --no-headers \
+    | grep --color=never -o 'instance-type=[^,]*' \
+    | awk -F'=' '{print $2}' \
+    | sort \
+    | uniq -c
 }
 
 # Find pods which have duplicates on the same node

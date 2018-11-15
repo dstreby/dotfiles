@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+
+# We need this because numfmt is installed as gnumfmt on OSX
+if command -v "numfmt" >/dev/null 2>&1; then
+  NUMFMTCMD=numfmt
+elif command -v "gnumfmt" >/dev/null 2>&1; then
+  NUMFMTCMD=gnumfmt
+else
+  (>&2 echo "This function requires 'numfmt' / 'gnumfmt', please install it.")
+  exit 1
+fi
+
+# Get basic cluster stats
+cluster_name=$(kubectl config get-contexts --no-headers | awk '/^\*/ {print $3}')
+total_nodes=$(kubectl get node --no-headers | wc -l | awk '{$1=$1};1')
+
+############################################
+# Get Cluster / Allocatable Totals
+############################################
+# Schedulable Nodes:      $sched_nodes
+# Total CPU Capacity:     $cluster_cpu
+# Allocatable CPU:        $allo_cpu
+# Total Memory Capacity:  $cluster_mem
+# Allocatable Memory:     $allo_mem
+############################################
+read sched_nodes cluster_cpu allo_cpu cluster_mem allo_mem <<< \
+  $(kubectl get node -o=jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.status.capacity.cpu}{"\t"}{.status.allocatable.cpu}{"\t"}{.status.capacity.memory}{"\t"}{.status.allocatable.memory}{"\t"}{.spec.unschedulable}{"\n"}{end}' \
+  | grep -v true \
+  | $NUMFMTCMD --from=auto --field=4-5 \
+  | awk '{ nodes += 1; cpu_cap += $2; allo_cpu += $3; mem_cap += $4; allo_mem += $5 } END { printf "%s %s %s %s %s", nodes, cpu_cap, allo_cpu, mem_cap, allo_mem }'
+)
+
+############################################
+# Get Quota Totals
+############################################
+# Total CPU Quota:        $quota_cpu
+# Total Memory Quota:     $quota_mem
+############################################
+read quota_cpu quota_mem <<< \
+  $(kubectl get quota --all-namespaces -o=jsonpath='{range .items[*]}{.metadata.namespace}{"\t"}{.status.hard.requests\.cpu}{"\t"}{.status.hard.requests\.memory}{"\n"}{end}' \
+  | $NUMFMTCMD --from=auto --field=3 \
+  | awk '{ if ( $2 ~ "m" ) { gsub("m",""); $2 = $2/1000 } { cpu += $2; mem += $3 } } END { printf "%s %s", cpu, mem }'
+)
+
+# Calculate headroom / shortfal
+diff_cpu=$(echo "${allo_cpu}-${quota_cpu}" | bc)
+diff_mem=$(echo "${allo_mem}-${quota_mem}" | bc)
+
+# Make human readable memory
+cluster_mem_h=$(echo "$cluster_mem" | $NUMFMTCMD --to=iec-i)
+allo_mem_h=$(echo "$allo_mem" | $NUMFMTCMD --to=iec-i)
+quota_mem_h=$(echo "$quota_mem" | $NUMFMTCMD --to=iec-i)
+diff_mem_h=$(echo "$diff_mem" | $NUMFMTCMD --to=iec-i)
+
+# Format capacity messages
+warning_msg=''
+
+if (( $(echo "$diff_cpu < 0" | bc -l) )); then
+  capacity_cpu="\e[31m${diff_cpu}\e[39m"
+  warning_msg="${warning_msg}\e[31mWARNING:\e[39m CPU Quota exceeds cluster capacity!\n"
+else
+  capacity_cpu="\e[32m${diff_cpu}\e[39m"
+fi
+
+if (( $(echo "$diff_mem < 0" | bc -l) )); then
+  capacity_mem="\e[31m${diff_mem_h}\e[39m"
+  warning_msg="${warning_msg}\e[31mWARNING:\e[39m Memory Quota exceeds cluster capacity!\n"
+else
+  capacity_mem="\e[32m${diff_mem_h}\e[39m"
+fi
+
+# Print the table
+echo -e "\
+Cluster Info
+$(printf "%40s" | tr " " "-")
+Cluster Name:\t${cluster_name}
+Total Nodes:\t${total_nodes}
+Schedulable:\t${sched_nodes}
+$(printf "%40s" | tr " " "=")
+Total Cluster Capacity
+$(printf "%40s" | tr " " "-")
+CPU (cores):\t${cluster_cpu}
+Memory:\t\t${cluster_mem_h}
+$(printf "%40s" | tr " " "=")
+Allocatable Cluster Capacity
+$(printf "%40s" | tr " " "-")
+CPU (cores):\t${allo_cpu}
+Memory:\t\t${allo_mem_h}
+$(printf "%40s" | tr " " "=")
+Hard Quota Totals
+$(printf "%40s" | tr " " "-")
+CPU (cores):\t${quota_cpu}\nMemory:\t\t${quota_mem_h}
+$(printf "%40s" | tr " " "=")
+Remaining Capacity
+$(printf "%40s" | tr " " "-")
+CPU (cores):\t${capacity_cpu}
+Memory:\t\t${capacity_mem}
+$(printf "%40s" | tr " " "=")
+${warning_msg}"
