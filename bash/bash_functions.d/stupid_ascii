@@ -1,0 +1,33 @@
+# vim: ft=sh
+
+function stupid-ascii
+{
+  local ascii=${1:-shrug}
+  declare -A ascii_map
+
+  ascii_map=(
+    [csi]='(•_•) ( •_•)>⌐■-■ (⌐■_■)'
+    [dunno]='¯\(°_o)/¯'
+    [lenny]='( ͡° ͜ʖ ͡°)'
+    [lol]='L(° O °L)'
+    [look]='(ಡ_ಡ)☞'
+    [meh]='ಠ_ಠ'
+    [r]='®'
+    [really]='ò_ô'
+    [run]='(╯°□°)╯'
+    [shrug]='¯\_(ツ)_/¯'
+    [tableflip]='(ノ ゜Д゜)ノ ︵ ┻━┻'
+    [tm]='™'
+    [wave]='(ʘ‿ʘ)╯'
+    [zoidberg]='(V) (°,,,,°) (V)'
+  )
+
+  # If input is "ALL" print the whole map
+  if [ "$ascii" = "ALL" ]; then
+    for k in "${!ascii_map[@]}"; do
+      echo -e "${k}\t${ascii_map[$k]}"
+    done | sort | column -t -s $'\t'
+  else
+    echo ${ascii_map[$ascii]}
+  fi
+}
