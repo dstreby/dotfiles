@@ -189,47 +189,16 @@ function kube-extract-secrets
 
 # Print cluster wide quota information
 # Note this isn't portable to gnu systems; remove the "g" prefix
-# from numfmt and paste if you want to run it on a gnu/linux system
-# the prefixes are needed here to run the GNU binaries of the respective
-# functions on a BSD system (mac)
+# from numfmt if you want to run it on a gnu/linux system
+# the prefix is needed here to run the GNU binaries of the respective
+# function on a BSD system (mac)
 function kube-quotas
 {
-  local quota_blob=$(kubectl get quota --all-namespaces -o json)
-
-  # The tr and numfmt processing is required to normalize the values
-  # kubernetes spits out
-  echo -n "Total hard mem quota: "
-  echo $quota_blob \
-    | jq -r '.items[].status.hard["requests.memory"]' \
-    | tr 'kmgt' 'KMGT' \
-    | gnumfmt --from=auto \
-    | gpaste -sd+ \
-    | bc \
-    | gnumfmt --to=iec-i
-
-  echo -n "Total used mem quota: "
-  echo $quota_blob \
-    | jq -r '.items[].status.used["requests.memory"]' \
-    | tr 'kmgt' 'KMGT' \
-    | gnumfmt --from=auto \
-    | gpaste -sd+ \
-    | bc \
-    | gnumfmt --to=iec-i
-
-  # The awk processing is to convert lines given in milicores to cores
-  echo -n "Total hard cpu quota: "
-  echo $quota_blob \
-    | jq -r '.items[].status.hard["requests.cpu"]' \
-    | awk '{ if ( $1 ~ "m" ) { gsub("m",""); print $1/1000 } else { print } }' \
-    | gpaste -sd+ \
-    | bc
-
-  echo -n "Total used cpu quota: "
-  echo $quota_blob \
-    | jq -r '.items[].status.used["requests.cpu"]' \
-    | awk '{ if ( $1 ~ "m" ) { gsub("m",""); print $1/1000 } else { print } }' \
-    | gpaste -sd+ \
-    | bc
+  kubectl get quota --all-namespaces -o=jsonpath='{range .items[*]}{.metadata.namespace}{"\t"}{.status.used.requests\.cpu}{"\t"}{.status.used.requests\.memory}{"\n"}{end}' \
+    | gnumfmt --from=auto --field=3 \
+    | awk 'BEGIN { printf "Namespace CPU Memory\n--------- --- ------\n" } { if ( $2 ~ "m" ) { gsub("m","",$2); $2 = $2/1000 } { cpu += $2; mem += $3; print } } END { printf "TOTAL %s %s\n", cpu, mem }' \
+    | gnumfmt --to=iec-i --field=3 --header=2 \
+    | column -t
 }
 
 # Show deployments which are missing pods

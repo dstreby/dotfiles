@@ -39,7 +39,7 @@ read sched_nodes cluster_cpu allo_cpu cluster_mem allo_mem <<< \
 read quota_cpu quota_mem <<< \
   $(kubectl get quota --all-namespaces -o=jsonpath='{range .items[*]}{.metadata.namespace}{"\t"}{.status.hard.requests\.cpu}{"\t"}{.status.hard.requests\.memory}{"\n"}{end}' \
   | $NUMFMTCMD --from=auto --field=3 \
-  | awk '{ if ( $2 ~ "m" ) { gsub("m",""); $2 = $2/1000 } { cpu += $2; mem += $3 } } END { printf "%s %s", cpu, mem }'
+  | awk '{ if ( $2 ~ "m" ) { gsub("m","",$2); $2 = $2/1000 } { cpu += $2; mem += $3 } } END { printf "%s %s", cpu, mem }'
 )
 
 # Calculate headroom / shortfal
