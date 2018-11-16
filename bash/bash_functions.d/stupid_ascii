@@ -28,6 +28,6 @@ function stupid-ascii
       echo -e "${k}\t${ascii_map[$k]}"
     done | sort | column -t -s $'\t'
   else
-    echo ${ascii_map[$ascii]}
+    echo ${ascii_map[$ascii]} | tee >(pbcopy)
   fi
 }
