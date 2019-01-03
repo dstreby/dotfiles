@@ -2,6 +2,18 @@
 
 #### AWS related functions ####
 
+# List all EC2 Instances in region by name
+function aws-ec2-list
+{
+  local region=${2:-us-west-2}
+  aws ec2 describe-instances \
+    --region=${region} \
+    --query 'Reservations[].Instances[].{Name:Tags[?Key==`Name`].Value,ID:InstanceId}' \
+    | jq -r '.[] | "\(.Name[]) \(.ID)"' \
+    | column -t \
+    | sort
+}
+
 # Get total EBS volume usage
 function aws-ebs-usage
 {
@@ -88,4 +100,12 @@ function aws-get-group-users
   aws iam get-group --group-name ${1:?} \
     | jq -r '.Users[].UserName' \
     | sort | uniq
+}
+
+# Get all Elasticache Clusters
+function aws-get-elasticache
+{
+  aws elasticache describe-cache-clusters \
+    --output table \
+    --query 'CacheClusters[*].{ID:CacheClusterId,ReplicationGroup:ReplicationGroupId,Engine:Engine,SubnetGroup:CacheSubnetGroupName}'
 }

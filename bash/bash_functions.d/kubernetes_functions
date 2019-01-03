@@ -194,7 +194,10 @@ function kube-extract-secrets
 # function on a BSD system (mac)
 function kube-quotas
 {
+  echo "Current USED quota by namespace"
+  echo "-------------------------------"
   kubectl get quota --all-namespaces -o=jsonpath='{range .items[*]}{.metadata.namespace}{"\t"}{.status.used.requests\.cpu}{"\t"}{.status.used.requests\.memory}{"\n"}{end}' \
+    | awk '{ if ( $3 ~ "k$" ) { gsub("k$","K",$3 ) } } { print $0 }' \
     | gnumfmt --from=auto --field=3 \
     | awk 'BEGIN { printf "Namespace CPU Memory\n--------- --- ------\n" } { if ( $2 ~ "m" ) { gsub("m","",$2); $2 = $2/1000 } { cpu += $2; mem += $3; print } } END { printf "TOTAL %s %s\n", cpu, mem }' \
     | gnumfmt --to=iec-i --field=3 --header=2 \
