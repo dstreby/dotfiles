@@ -194,13 +194,11 @@ function kube-extract-secrets
 # function on a BSD system (mac)
 function kube-quotas
 {
-  echo "Current USED quota by namespace"
-  echo "-------------------------------"
-  kubectl get quota --all-namespaces -o=jsonpath='{range .items[*]}{.metadata.namespace}{"\t"}{.status.used.requests\.cpu}{"\t"}{.status.used.requests\.memory}{"\n"}{end}' \
+  kubectl get quota --all-namespaces -o=jsonpath='{range .items[*]}{.metadata.namespace}{"\t"}{.status.used.requests\.cpu}{"\t"}{.status.used.requests\.memory}{"\t"}{.status.hard.requests\.cpu}{"\t"}{.status.hard.requests\.memory}{"\n"}{end}' \
     | awk '{ if ( $3 ~ "k$" ) { gsub("k$","K",$3 ) } } { print $0 }' \
-    | gnumfmt --from=auto --field=3 \
-    | awk 'BEGIN { printf "Namespace CPU Memory\n--------- --- ------\n" } { if ( $2 ~ "m" ) { gsub("m","",$2); $2 = $2/1000 } { cpu += $2; mem += $3; print } } END { printf "TOTAL %s %s\n", cpu, mem }' \
-    | gnumfmt --to=iec-i --field=3 --header=2 \
+    | gnumfmt --from=auto --field=3,5 \
+    | awk 'BEGIN { printf "Namespace Used-CPU Used-Memory Limit-CPU Limit-Memory\n--------- -------- ----------- --------- ------------\n" } { if ( $2 ~ "m" ) { gsub("m","",$2); $2 = $2/1000 } if ( $4 ~ "m" ) { gsub("m","",$4); $4 = $4/1000 } { used_cpu += $2; used_mem += $3; hard_cpu += $4; hard_mem += $5; print } } END { printf "TOTAL %s %s %s %s\n", used_cpu, used_mem, hard_cpu, hard_mem }' \
+    | gnumfmt --to=iec-i --field=3,5 --header=2 \
     | column -t
 }
 
