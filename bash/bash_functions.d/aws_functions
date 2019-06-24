@@ -109,3 +109,11 @@ function aws-get-elasticache
     --output table \
     --query 'CacheClusters[*].{ID:CacheClusterId,ReplicationGroup:ReplicationGroupId,Engine:Engine,SubnetGroup:CacheSubnetGroupName}'
 }
+
+# Get current version of IAM policy document
+function aws-iam-get-policy-document
+{
+  local policy=${1:?}
+  local version=$(aws iam get-policy --query 'Policy.DefaultVersionId' --output text --policy-arn ${policy})
+  aws iam get-policy-version --query 'PolicyVersion.Document' --policy-arn ${policy} --version-id ${version}
+}

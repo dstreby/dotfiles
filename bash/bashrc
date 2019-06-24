@@ -28,6 +28,11 @@ if [[ "$OSX" == "1" ]]; then
   fi
 fi
 
+# Go dev environment
+export GOPATH="${HOME}/.go"
+export GOROOT="$(brew --prefix golang)/libexec"
+export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
+
 # Source git completion functions
 if [ -f "${HOME}/dotfiles/bash/git-completion" ]; then
     source "${HOME}/dotfiles/bash/git-completion"

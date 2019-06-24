@@ -76,11 +76,6 @@ function div-line
   printf "%${2:-$(tput cols)}s\n" | tr " " "${1:--}"
 }
 
-function dick-line
-{
-  printf "8%${1:-80}sD\n" | tr " " "="
-}
-
 function mkbak
 {
   local file=${1:?}
@@ -120,6 +115,21 @@ function vid-to-gif
 
   ffmpeg -i "${1:?}" -vf scale=800:-1 -r 10 -f image2pipe -vcodec ppm - \
     | convert -delay 5 -layers Optimize -loop 0 - "${2:?}"
+}
+
+function ldap_time_convert
+{
+  local ldap_time="${1:?}"
+  local ldap_time_seconds="$((${ldap_time}/10000000))"
+  local unix_time_seconds="$((${ldap_time_seconds}-11644473600))"
+
+  if [[ -z "$OSX" ]]; then
+    local human_time="$(date -d @${unix_time_seconds})"
+  else
+    local human_time="$(gdate -d @${unix_time_seconds})"
+  fi
+
+  echo "$human_time"
 }
 
 function mkcd
