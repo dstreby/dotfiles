@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+_aws_role="$(awk '{print $1}'<~/.aws/current_default 2>/dev/null)"
+_aws_token_validity="$([[ $(($(gdate -d $(awk '{print $2}'<~/.aws/current_default) +"%s") - $(gdate +"%s"))) < 0 ]] && echo "[X]" || echo "[✓]")"
+_kube_context="$(kubectl config get-contexts --no-headers | awk '/^\*/ {print $2 ":" $5}')"
+_load="$(uptime | awk -F: '{print $NF}')"
+_date="$(gdate "+%a %F %T %Z")"
+
+_purple_on_drkgrey='#[fg=colour89,bg=colour234]'
+_yellow_on_purple='#[fg=yellow,bg=colour89]'
+_blue_on_purple='#[fg=colour39,bg=colour89]'
+_black_on_blue='#[fg=black,bg=colour39]'
+_yellow_on_black='#[fg=yellow,bg=colour238]'
+_grey_on_black='#[fg=colour252,bg=colour238]'
+_black_on_grey='#[fg=colour235,bg=colour252]'
+
+echo "#[fg=colour89,bg=colour234]#[fg=yellow,bg=colour89] AWS » ${_aws_role} ${_aws_token_validity} \
+#[fg=colour39,bg=colour89]\
+#[fg=black,bg=colour39] k8s » \
+${_kube_context} \
+#[fg=colour238,bg=colour39]#[fg=yellow,bg=colour238]\
+${_load} \
+#[fg=colour252,bg=colour238]#[fg=colour235,bg=colour252] \
+${_date}"

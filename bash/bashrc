@@ -108,7 +108,7 @@ function  __prompt_command
 
   # Show current AWS environment (if set)
   if [[ -z ${AWS_DEFAULT_PROFILE+x} ]]; then
-    local prompt_aws=''
+    local prompt_aws=" ${ANSI_purple}[aws:default]${ANSI_reset}"
   else
     local prompt_aws=" ${ANSI_purple}[aws:${AWS_DEFAULT_PROFILE}]${ANSI_reset}"
   fi
