@@ -1,6 +1,16 @@
 # vim: ft=sh
 
 #### AWS related functions ####
+complete -C '/usr/local/bin/aws_completer' aws
+
+
+#### Aliases ####
+alias aws-orgs='aws organizations list-accounts --output table'
+alias aws-whoami='aws sts get-caller-identity'
+alias aws-vars='env | grep AWS'
+alias aws-unset=$'for _var in $(env | awk -F= \'/^AWS/ {print $1}\'); do echo "Unsetting: ${_var}=$(eval echo \$$_var)"; unset $_var; done'
+alias aws-profiles=$'awk \'/^\[/ {print $NF}\' ~/.aws/config ~/.aws/credentials | tr -d \'[]\' | sort | uniq'
+#### Functions ####
 
 # List all EC2 Instances in region by name
 function aws-ec2-list
