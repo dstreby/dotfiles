@@ -1,12 +1,5 @@
 # vim: ft=sh
 
-### Source functions from bash_functions.d if it exists ###
-if [ -d "${HOME}/dotfiles/bash/bash_functions.d" ]; then
-  for file in ${HOME}/dotfiles/bash/bash_functions.d/*; do
-    source $file
-  done
-fi
-
 ### Git Related Functions ###
 function git-repo-loc
 {

@@ -8,9 +8,26 @@ if [ -d "${HOME}/dotfiles/bash/bashrc.d" ]; then
   done
 fi
 
-# Source bash functions
+### Source bash_functions if it exists ###
 if [ -f "${HOME}/dotfiles/bash/bash_functions" ]; then
     source "${HOME}/dotfiles/bash/bash_functions"
+fi
+
+### Source functions from bash_functions.d if it exists ###
+if [ -d "${HOME}/dotfiles/bash/bash_functions.d" ]; then
+  for file in ${HOME}/dotfiles/bash/bash_functions.d/*; do
+    source $file
+  done
+fi
+
+# Set options for the git PS1
+# We only want to set these if the git-prompt was successfully sourced
+if command -v "__git_ps1" > /dev/null 2>&1; then
+    export GIT_PS1_SHOWDIRTYSTATE=1
+    export GIT_PS1_SHOWSTASHSTATE=1
+    export GIT_PS1_SHOWUNTRACKEDFILES=1
+    export GIT_PS1_SHOWCOLORHINTS=1
+    export GIT_PS1_SHOWUPSTREAM=1
 fi
 
 # Add dir_colors (Linux only)
@@ -20,8 +37,8 @@ fi
 
 # Add bash-completion (OS-X only, see brew bash-completion)
 if [[ "$OSX" == "1" ]]; then
-  if [ -f /usr/local/share/bash-completion/bash_completion ]; then
-    . /usr/local/share/bash-completion/bash_completion
+  if [[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]]; then
+    . "/usr/local/etc/profile.d/bash_completion.sh"
   fi
 fi
 
@@ -29,22 +46,6 @@ fi
 export GOPATH="${HOME}/.go"
 export GOROOT="$(brew --prefix golang)/libexec"
 export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
-
-# Source git completion functions
-if [ -f "${HOME}/dotfiles/bash/git-completion" ]; then
-    source "${HOME}/dotfiles/bash/git-completion"
-fi
-
-# Source git prompt functions
-if [ -f "${HOME}/dotfiles/bash/git-prompt" ]; then
-    source "${HOME}/dotfiles/bash/git-prompt"
-    # Set options for the git PS1
-    export GIT_PS1_SHOWDIRTYSTATE=1
-    export GIT_PS1_SHOWSTASHSTATE=1
-    export GIT_PS1_SHOWUNTRACKEDFILES=1
-    export GIT_PS1_SHOWCOLORHINTS=1
-    export GIT_PS1_SHOWUPSTREAM=1
-fi
 
 # Configure PAGER to use vim for man pages
 # N.B. Make sure to clear $PAGER in vimrc so vim's Man function still works
