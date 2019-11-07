@@ -145,6 +145,33 @@ function scratch
   vim "$file"
 }
 
+# Function to find and replace pattern in all files specified
+function replace
+{
+  if [ $# -lt 3 ]; then
+    echo "Missing Arguments"
+    echo "USAGE:"
+    echo "${FUNCNAME[0]} find-this replace-with file/glob"
+    return 1
+  fi
+
+  local find=${1:?}
+  shift
+  local replace=${1:?}
+  shift
+
+  items=$(grep --color=never -l "$find" "$@")
+
+  temp_file="${TMPDIR:-/tmp}/replace_func_temp_file.$$"
+  ${IFS+"false"} && unset oldifs || oldifs="$IFS"
+  IFS=$'\n'
+  for item in $items; do
+    sed "s/$find/$replace/g" "$item" > "$temp_file" \
+      && mv "$temp_file" "$item"
+  done
+  ${oldifs+"false"} && unset IFS || IFS="$oldifs"
+}
+
 function move-last-download
 {
   local download_dir="${HOME}/Downloads/"
