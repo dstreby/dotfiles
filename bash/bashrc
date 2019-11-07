@@ -1,19 +1,16 @@
 # If not running interactively, don't do anything
 [[ "$-" != *i* ]] && return
 
-# Source bash aliases
-if [ -f "${HOME}/dotfiles/bash/bash_aliases" ]; then
-  source "${HOME}/dotfiles/bash/bash_aliases"
+### Source everything from bashrc.d if it exists ###
+if [ -d "${HOME}/dotfiles/bash/bashrc.d" ]; then
+  for file in ${HOME}/dotfiles/bash/bashrc.d/*; do
+    source $file
+  done
 fi
 
 # Source bash functions
 if [ -f "${HOME}/dotfiles/bash/bash_functions" ]; then
     source "${HOME}/dotfiles/bash/bash_functions"
-fi
-
-# Source private
-if [ -f "${HOME}/dotfiles/bash/bash_private" ]; then
-    source "${HOME}/dotfiles/bash/bash_private"
 fi
 
 # Add dir_colors (Linux only)
