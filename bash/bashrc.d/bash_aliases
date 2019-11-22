@@ -8,6 +8,7 @@ alias scavenge="free && sudo sh -c 'echo 3 >/proc/sys/vm/drop_caches' && free"
 alias cidr_sort="sort -n -t . -k 1,1 -k 2,2 -k 3,3 -k 4,4"
 alias tf='terraform'
 alias gupdate='git checkout master && git pull'
+alias pretty-env="env | grep --color=always '^[^=]*'| sed 's/=/|/' | sort | column -ts\|"
 
 # Kubernetes stuff
 alias kc='kubectl'

@@ -1,5 +1,6 @@
 # Set common environment vars
 export EDITOR=vim
+export XDG_CONFIG_HOME="${HOME}/.config"
 
 # Determine if we're on OS-X. This is used in later functions
 if [[ "$(uname -s)" == "Darwin" ]]; then
@@ -8,13 +9,6 @@ fi
 
 # Add home bin dir to path
 export PATH="${HOME}/bin:${PATH}"
-
-# source the users bashrc if it exists
-if [ -f "${HOME}/dotfiles/bash/bashrc" ] ; then
-  source "${HOME}/dotfiles/bash/bashrc"
-elif [ -f "${HOME}/.bashrc" ] ; then
-    source "${HOME}/.bashrc"
-fi
 
 # Linux Only ******************************************************************
 if [[ -z "$OSX" ]]; then
@@ -30,3 +24,10 @@ if [[ "$OSX" -eq 1 ]]; then
    && export PATH="/usr/local/opt/openssl/bin:$PATH"
 fi
 # /OS-X Only ******************************************************************
+
+# source the users bashrc if it exists
+if [ -f "${HOME}/dotfiles/bash/bashrc" ] ; then
+  source "${HOME}/dotfiles/bash/bashrc"
+elif [ -f "${HOME}/.bashrc" ] ; then
+    source "${HOME}/.bashrc"
+fi

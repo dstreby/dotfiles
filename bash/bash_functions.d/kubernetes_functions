@@ -8,6 +8,21 @@
 #  kubectl completion bash > $(brew --prefix)/etc/bash_completion.d/kubectl
 #fi
 
+# Pipeable command to highlight kubectl output
+# e.g. `kubectl get pods | kube-color`
+alias kube-color="
+GREP_COLOR='01;32' egrep --color=always 'Running|$' \
+| GREP_COLOR='01;33' egrep --color=always 'ContainerCreating|$' \
+| GREP_COLOR='01;33' egrep --color=always 'Terminating|$' \
+| GREP_COLOR='01;31' egrep --color=always 'Error|$' \
+| GREP_COLOR='01;31' egrep --color=always 'CrashLoopBackOff|$' \
+| GREP_COLOR='01;31' egrep --color=always 'ImagePullBackOff|$' \
+| GREP_COLOR='01;33' egrep --color=always 'Pending|$'"
+
+if (command -v "colordiff" >/dev/null 2>&1); then
+  export KUBECTL_EXTERNAL_DIFF=colordiff
+fi
+
 # Quickly display / switch kubernetes contexts
 function kcsc
 {

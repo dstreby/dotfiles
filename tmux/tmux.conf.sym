@@ -23,6 +23,9 @@ set -g message-fg colour234
 set -g message-bg yellow
 set -g message-attr bold
 
+# Pane colours
+set -g window-style 'fg=default,bg=default'
+set -g window-active-style 'fg=default,bg=default'
 set -g pane-border-fg colour245
 set -g pane-active-border-fg colour39
 

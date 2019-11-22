@@ -83,6 +83,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'scrooloose/nerdtree'
 Plug 'sjl/gundo.vim'
 Plug 'diepm/vim-rest-console'
+Plug 'dense-analysis/ale'
 " Language specific
 Plug 'WolfgangMehner/c-support'
 Plug 'hashivim/vim-terraform', {'for': 'terraform'}
@@ -116,6 +117,8 @@ nnoremap <leader>u :GundoToggle<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Filetype Settings
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Kubernetes
+au BufRead,BufNewFile Kustomization set ft=yaml
 " Puppet
 au BufNewFile,BufRead *.pp,*.erb set ft=ruby
 " C/C++
@@ -145,5 +148,3 @@ autocmd BufRead,BufNewFile *.txt noremap <buffer> <silent> k gk
 autocmd BufRead,BufNewFile *.txt noremap <buffer> <silent> j gj
 autocmd BufRead,BufNewFile *.txt hi clear SpellBad
 autocmd BufRead,BufNewFile *.txt hi SpellBad cterm=underline
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
