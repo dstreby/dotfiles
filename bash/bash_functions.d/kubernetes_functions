@@ -2,11 +2,11 @@
 
 #### Kubernetes functions ####
 # Load kubectl autocomplete
-#if [[ -z "$OSX" ]]; then
-#  source <(kubectl completion bash)
-#else
-#  kubectl completion bash > $(brew --prefix)/etc/bash_completion.d/kubectl
-#fi
+if [[ -z "$OSX" ]]; then
+  source <(kubectl completion bash)
+else
+  kubectl completion bash > $(brew --prefix)/etc/bash_completion.d/kubectl
+fi
 
 # Pipeable command to highlight kubectl output
 # e.g. `kubectl get pods | kube-color`

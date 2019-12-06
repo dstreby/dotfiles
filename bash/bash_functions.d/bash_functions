@@ -1,6 +1,21 @@
 # vim: ft=sh
 
 ### Git Related Functions ###
+function git-open-web
+{
+  if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    local url
+    url=$(git config --get remote.origin.url \
+      | sed -e "s/git@/https:\/\//g" \
+      | sed -e "s/com:/com\//"
+    )
+    open "$url"
+  else
+    echo 'Not inside git repository' 1>&2
+    return 1
+  fi
+}
+
 function git-repo-loc
 {
   git clone --depth 1 "${1:?}" temp-linecount-repo \
@@ -180,6 +195,12 @@ function move-last-download
 function command_exists
 {
   command -v "${1:?}" >/dev/null 2>&1
+}
+
+is_dos_line_endings() {
+  local file="${1:?}"
+  file -k "$file" \
+    | grep -q 'CRLF'
 }
 
 function psdt

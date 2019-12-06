@@ -12,6 +12,9 @@ alias pretty-env="env | grep --color=always '^[^=]*'| sed 's/=/|/' | sort | colu
 
 # Kubernetes stuff
 alias kc='kubectl'
+# Make kubectl autocomplete work with alias
+command -v __start_kubectl >/dev/null 2>&1 \
+  && complete -F __start_kubectl kc
 
 # Login commands
 alias aws-login='eval $(aws-env -p dstreby-2u)'

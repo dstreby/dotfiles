@@ -84,6 +84,7 @@ Plug 'scrooloose/nerdtree'
 Plug 'sjl/gundo.vim'
 Plug 'diepm/vim-rest-console'
 Plug 'dense-analysis/ale'
+Plug 'vim-scripts/diffchanges.vim'
 " Language specific
 Plug 'WolfgangMehner/c-support'
 Plug 'hashivim/vim-terraform', {'for': 'terraform'}

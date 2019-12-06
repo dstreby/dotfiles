@@ -22,6 +22,10 @@ if [[ "$OSX" -eq 1 ]]; then
   # Add the brew installed openssl binaries to the PATH (Mac only)
   [[ -d "/usr/local/opt/openssl/bin" ]] \
    && export PATH="/usr/local/opt/openssl/bin:$PATH"
+
+  # Set up bash_completion
+  export BASH_COMPLETION_COMPAT_DIR="/usr/local/etc/bash_completion.d"
+  [[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
 fi
 # /OS-X Only ******************************************************************
 
