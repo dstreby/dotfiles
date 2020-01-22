@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Script to validate a kubernetes serviceaccount token against
 # the x509 certificate used by the k8s admission controller
@@ -12,6 +12,13 @@
 # Namespace argument is optional and only needed if your current
 # kubernetes context is set to a different namespace than where the
 # service account token resides.
+#
+# If you don't have the API server certificate, you can fetch it like so:
+#
+# servername=kubernetes-server.example.com
+# echo | openssl s_client -showcerts -servername "$servername" -connect "${servername}:443" 2>/dev/null \
+# | openssl x509 -inform pem -out certificate.pem
+
 
 readonly cert_file="${1:?}"
 readonly kube_secret="${2:?}"
