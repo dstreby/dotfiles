@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # Script to validate a kubernetes serviceaccount token against
-# the x509 certificate used by the k8s adminission controller
+# the x509 certificate used by the k8s admission controller
 # as set by --service-account-key-file (if unset, it will default
 # to the API server's private TLS key)
 #
-# Usage: ./validate-jwt.sh certificate token [namespace]
+# Usage: kube-validate-token certificate token [namespace]
 #
-# e.g. ./validate-token.sh apiserver.pem default-token-9cr9f kube-system
+# e.g. kube-validate-token apiserver.pem default-token-9cr9f kube-system
 #
 # Namespace argument is optional and only needed if your current
 # kubernetes context is set to a different namespace than where the
@@ -71,7 +71,7 @@ print_json() {
   fi
 }
 
-
+# Decode JWT segments
 base64_header=$(base64_URI_to_base64 "$encoded_header")
 base64_payload=$(base64_URI_to_base64 "$encoded_payload")
 base64_signature=$(base64_URI_to_base64 "$encoded_signature")
