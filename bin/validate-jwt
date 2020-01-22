@@ -1,0 +1,82 @@
+#!/bin/bash
+
+# Script to validate a signed JWT against an x509 certificate
+# Usage: ./validate-jwt.sh certificate jwt
+
+readonly cert_file="${1:?}"
+readonly token_file="${2:?}"
+readonly tmp_dir="$(mktemp -d -t jwt-XXXXXXXXXX)"
+
+# Check dependencies
+command -v "openssl" > /dev/null 2>&1 || { >&2 echo "openssl is required, please install it"; exit 1; }
+command -v "jq" > /dev/null 2>&1 && readonly pretty_json=true || >&2 echo "install jq to pretty print json"
+
+mkdir -p "$tmp_dir"
+
+# Extract the public key from the x509 certificate
+openssl x509 -pubkey -noout -in "$cert_file" > "${tmp_dir}/pubkey.pem"
+
+# Extract header / payload / signature from JWT
+jwt=$(cat "$token_file")
+body=${jwt%.*}
+encoded_header=${body%.*}
+encoded_payload=${body#*.}
+encoded_signature=${jwt##*.}
+
+# Pad base64 and remove URI encoding
+base64_URI_to_base64() {
+  local modlen=$(( ${#1} % 4 ))
+  local padded_base64=''
+
+  case "$modlen" in
+    2)
+      padded_base64="${1}=="
+      ;;
+    3)
+      padded_base64="${1}="
+      ;;
+    *)
+      padded_base64="${1}"
+      ;;
+  esac
+
+  echo "$padded_base64" | tr -- '-_' '+/'
+}
+
+print_json() {
+  if [ "$pretty_json" = true ]; then
+    echo "$@" | jq
+  else
+    echo "$@"
+  fi
+}
+
+# Decode JWT segments
+base64_header=$(base64_URI_to_base64 "$encoded_header")
+base64_payload=$(base64_URI_to_base64 "$encoded_payload")
+base64_signature=$(base64_URI_to_base64 "$encoded_signature")
+
+decoded_header=$(echo "$base64_header" | base64 --decode)
+decoded_payload=$(echo "$base64_payload" | base64 --decode)
+
+# Write temp files
+echo -n "$base64_signature" | base64 --decode > "${tmp_dir}/signature.dat"
+echo -n "$body" > "${tmp_dir}/body.txt"
+
+# Output unencoded JWT
+echo "------------------------------------------------"
+echo "Decoded header:"
+print_json "$decoded_header"
+echo "------------------------------------------------"
+echo "Decoded payload:"
+print_json "$decoded_payload"
+echo "------------------------------------------------"
+
+# Verify the signature against the pubkey
+echo "Validating signature...."
+openssl dgst -sha256 -verify "${tmp_dir}/pubkey.pem" -signature "${tmp_dir}/signature.dat" "${tmp_dir}/body.txt"
+ssl_ret="$?"
+
+# Cleanup
+rm -rf "$tmp_dir"
+exit "$ssl_ret"
