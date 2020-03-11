@@ -91,6 +91,7 @@ Plug 'hashivim/vim-terraform', {'for': 'terraform'}
 Plug 'elixir-lang/vim-elixir', {'for': 'elixir'}
 Plug 'mustache/vim-mustache-handlebars', {'for': 'mustache'}
 Plug 'vim-scripts/AnsiEsc.vim', {'for': 'man'}
+Plug 'pedrohdz/vim-yaml-folds', {'for': 'yaml'}
 call plug#end()
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -120,6 +121,7 @@ nnoremap <leader>u :GundoToggle<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Kubernetes
 au BufRead,BufNewFile Kustomization set ft=yaml
+au BufRead,BufNewFile ~/.kube/config set ft=yaml
 " Puppet
 au BufNewFile,BufRead *.pp,*.erb set ft=ruby
 " C/C++

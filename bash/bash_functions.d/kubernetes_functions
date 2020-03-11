@@ -217,6 +217,13 @@ function kube-quotas
     | column -t
 }
 
+# forcibly terminate a pod. Note this may leave the docker container running on the node
+function kube-kill-pod
+{
+  local pod=${1:?}
+  kubectl delete pod "$pod" --force --grace-period=0
+}
+
 # Show deployments which are missing pods
 function kube-missing-pods
 {

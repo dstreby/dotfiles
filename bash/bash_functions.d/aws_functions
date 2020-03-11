@@ -24,6 +24,15 @@ function aws-ec2-list
     | sort
 }
 
+# List all running EC2 instances NOT in a VPC
+function aws-ec2-classic
+{
+  aws ec2 describe-instances \
+    --filters Name=instance-state-name,Values=running \
+    --query 'Reservations[*].Instances[?!not_null(VpcId)].{Instance:InstanceId,Name:Tags[?Key==`Name`]|[0].Value}' \
+    --output text
+}
+
 # Get total EBS volume usage
 function aws-ebs-usage
 {
