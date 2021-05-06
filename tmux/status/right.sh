@@ -6,6 +6,7 @@ aws_token_validity="$([[ $(($(gdate -d $(awk '{print $2}'<~/.aws/current_default
 kube_context="$(kubectl config get-contexts --no-headers | awk '/^\*/ {print $2 ":" $5}')"
 load="$(uptime | awk -F: '{print $NF}')"
 date="$(gdate "+%a %F %T %Z")"
+utc="$(gdate -u "+%T %Z")"
 
 # Formatting codes
 _purple_on_black='#[fg=colour89,bg=colour234]'
@@ -24,4 +25,6 @@ echo -n "${_blue_on_purple}${_black_on_blue} k8s » ${kube_context} "
 # System Load
 echo -n "${_yellow_on_black}${load} "
 # System Date / Time
-echo -n "${_grey_on_black}${_black_on_grey} ${date}"
+echo -n "${_grey_on_black}${_black_on_grey} ${date} "
+# UTC Time
+echo -n "${_yellow_on_black} ${utc}"

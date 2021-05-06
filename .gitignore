@@ -1,3 +1,2 @@
-*.netrwhist
-*private
-.*.swp
+/vim/vim.sym/plugged/**/
+/bash/bashrc.d/bash_private

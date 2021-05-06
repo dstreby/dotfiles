@@ -1,0 +1,8 @@
+# vim:ft=gitconfig
+
+[user]
+  name = Daniel Streby
+  email = dstreby@2u.com
+
+[core]
+  excludesfile = ~/dotfiles/git/gitignore_global

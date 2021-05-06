@@ -19,15 +19,13 @@ bind-key -T copy-mode-vi v send-keys -X begin-selection
 bind-key -T copy-mode-vi y send-keys -X copy-selection
 
 # Set status bar
-set -g message-fg colour234
-set -g message-bg yellow
-set -g message-attr bold
+set -g mode-style 'fg=colour234,bg=yellow,bold'
 
 # Pane colours
 set -g window-style 'fg=default,bg=default'
 set -g window-active-style 'fg=default,bg=default'
-set -g pane-border-fg colour245
-set -g pane-active-border-fg colour39
+set -g pane-border-style 'fg=colour245'
+set -g pane-active-border-style 'fg=colour39'
 
 set -g status on
 set -g status-interval 2
@@ -38,7 +36,7 @@ set -g status-bg colour234
 set -g status-left-length 32
 set -g status-left '#(~/dotfiles/tmux/status/left.sh)'
 
-set -g window-status-activity-attr bold
+set -g window-status-activity-style 'bold'
 set -g window-status-format "#[fg=white,bg=colour234] #I #W "
 set -g window-status-current-format "#[fg=colour234,bg=colour39]#[fg=colour25,bg=colour39,noreverse,bold] #I  #W #[fg=colour39,bg=colour234,nobold]"
 
