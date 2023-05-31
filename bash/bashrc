@@ -35,17 +35,17 @@ if [[ -z "$OSX" ]]; then
   eval $(dircolors $HOME/dotfiles/bash/dir_colors)
 fi
 
-# Add bash-completion (OS-X only, see brew bash-completion)
 if [[ "$OSX" == "1" ]]; then
+# Add bash-completion (OS-X only, see brew bash-completion)
   if [[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]]; then
     . "/usr/local/etc/profile.d/bash_completion.sh"
   fi
+  # Go dev environment
+  export GOPATH="${HOME}/.go"
+  export GOROOT="$(brew --prefix golang)/libexec"
+  export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
 fi
 
-# Go dev environment
-export GOPATH="${HOME}/.go"
-export GOROOT="$(brew --prefix golang)/libexec"
-export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
 
 # Cleanup $PATH / prevent duplicates if bash_profile / bashrc is sourced
 # multiple times.
