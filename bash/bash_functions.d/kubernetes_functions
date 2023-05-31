@@ -1,253 +1,256 @@
 # vim: ft=sh
+if command -v "kubectl" > /dev/null 2>&1; then
 
-#### Kubernetes functions ####
-# Load kubectl autocomplete
-if [[ -z "$OSX" ]]; then
-  source <(kubectl completion bash)
-else
-  kubectl completion bash > $(brew --prefix)/etc/bash_completion.d/kubectl
-fi
-
-# Pipeable command to highlight kubectl output
-# e.g. `kubectl get pods | kube-color`
-alias kube-color="
-GREP_COLOR='01;32' egrep --color=always 'Running|$' \
-| GREP_COLOR='01;33' egrep --color=always 'ContainerCreating|$' \
-| GREP_COLOR='01;33' egrep --color=always 'Terminating|$' \
-| GREP_COLOR='01;31' egrep --color=always 'Error|$' \
-| GREP_COLOR='01;31' egrep --color=always 'CrashLoopBackOff|$' \
-| GREP_COLOR='01;31' egrep --color=always 'ImagePullBackOff|$' \
-| GREP_COLOR='01;33' egrep --color=always 'Pending|$'"
-
-if (command -v "colordiff" >/dev/null 2>&1); then
-  export KUBECTL_EXTERNAL_DIFF=colordiff
-fi
-
-# Quickly display / switch kubernetes contexts
-function kcsc
-{
-  local context=${1}
-  if [[ -z "$context" ]]; then
-    kubectl config get-contexts
+  #### Kubernetes functions ####
+  # Load kubectl autocomplete
+  if [[ -z "$OSX" ]]; then
+    source <(kubectl completion bash)
   else
-    kubectl config use-context ${context}
+    kubectl completion bash > $(brew --prefix)/etc/bash_completion.d/kubectl
   fi
-}
 
-function _kcsc_complete {
-    local word=${COMP_WORDS[COMP_CWORD]}
-    local list=$(kubectl config get-contexts --no-headers | tr -d '\*' | awk '{print $1}')
-    list=$(compgen -W "$list" -- "$word")
-    COMPREPLY=($list)
-    return 0
-}
-complete -F _kcsc_complete kcsc
+  # Pipeable command to highlight kubectl output
+  # e.g. `kubectl get pods | kube-color`
+  alias kube-color="
+  GREP_COLOR='01;32' egrep --color=always 'Running|$' \
+  | GREP_COLOR='01;33' egrep --color=always 'ContainerCreating|$' \
+  | GREP_COLOR='01;33' egrep --color=always 'Terminating|$' \
+  | GREP_COLOR='01;31' egrep --color=always 'Error|$' \
+  | GREP_COLOR='01;31' egrep --color=always 'CrashLoopBackOff|$' \
+  | GREP_COLOR='01;31' egrep --color=always 'ImagePullBackOff|$' \
+  | GREP_COLOR='01;33' egrep --color=always 'Pending|$'"
 
-# Quickly display / switch kubernetes namespaces
-function kcns
-{
-  local namespace=${1}
-  if [[ -z "$namespace" ]]; then
-    kubectl get ns
-  else
-    local context=$(kubectl config current-context)
-    echo "Setting context ${context} to namespace ${namespace}..."
-    kubectl config set-context ${context} --namespace ${namespace}
+  if (command -v "colordiff" >/dev/null 2>&1); then
+    export KUBECTL_EXTERNAL_DIFF=colordiff
   fi
-}
 
-function _kcns_complete {
-    local word=${COMP_WORDS[COMP_CWORD]}
-    local list=$(kubectl get ns --no-headers | awk '{print $1}')
-    list=$(compgen -W "$list" -- "$word")
-    COMPREPLY=($list)
-    return 0
-}
-complete -F _kcns_complete kcns
+  # Quickly display / switch kubernetes contexts
+  function kcsc
+  {
+    local context=${1}
+    if [[ -z "$context" ]]; then
+      kubectl config get-contexts
+    else
+      kubectl config use-context ${context}
+    fi
+  }
 
-# Display formatted current context information
-function kube-current-context
-{
-  kubectl config get-contexts --no-headers \
-    | awk '/^\*/ {print "CLUSTER: " $3 "\nAUTHINFO: " $4 "\nNAMESPACE: " $5}' \
-    | column -t
-}
+  function _kcsc_complete {
+      local word=${COMP_WORDS[COMP_CWORD]}
+      local list=$(kubectl config get-contexts --no-headers | tr -d '\*' | awk '{print $1}')
+      list=$(compgen -W "$list" -- "$word")
+      COMPREPLY=($list)
+      return 0
+  }
+  complete -F _kcsc_complete kcsc
 
-# Finds the WAN IP of a given kubernetes node
-function kube-node-wan
-{
-  local node=${1:?}
-  kubectl describe node/${node} \
-    | awk '/ExternalDNS:/ { print $2}'
-}
+  # Quickly display / switch kubernetes namespaces
+  function kcns
+  {
+    local namespace=${1}
+    if [[ -z "$namespace" ]]; then
+      kubectl get ns
+    else
+      local context=$(kubectl config current-context)
+      echo "Setting context ${context} to namespace ${namespace}..."
+      kubectl config set-context ${context} --namespace ${namespace}
+    fi
+  }
 
-# Lists all kubernetes worker nodes and their WAN IP
-function kube-workers
-{
-  local nodes=$(kubectl get nodes --no-headers \
-    | grep -v 'SchedulingDisabled' \
-    | cut -d ' ' -f 1
-  )
+  function _kcns_complete {
+      local word=${COMP_WORDS[COMP_CWORD]}
+      local list=$(kubectl get ns --no-headers | awk '{print $1}')
+      list=$(compgen -W "$list" -- "$word")
+      COMPREPLY=($list)
+      return 0
+  }
+  complete -F _kcns_complete kcns
 
-  for node in $nodes; do
-    local node_wan=$(kube-node-wan ${node})
+  # Display formatted current context information
+  function kube-current-context
+  {
+    kubectl config get-contexts --no-headers \
+      | awk '/^\*/ {print "CLUSTER: " $3 "\nAUTHINFO: " $4 "\nNAMESPACE: " $5}' \
+      | column -t
+  }
 
-    echo "$node - $node_wan"
-  done
-}
+  # Finds the WAN IP of a given kubernetes node
+  function kube-node-wan
+  {
+    local node=${1:?}
+    kubectl describe node/${node} \
+      | awk '/ExternalDNS:/ { print $2}'
+  }
 
-# Get the node a given pod is running on
-function kube-pod-node
-{
-  local pod=${1:?}
-  kubectl describe po ${pod} \
-    | awk '/^Node:/ { split($NF, node, "/"); print node[1] }'
-}
+  # Lists all kubernetes worker nodes and their WAN IP
+  function kube-workers
+  {
+    local nodes=$(kubectl get nodes --no-headers \
+      | grep -v 'SchedulingDisabled' \
+      | cut -d ' ' -f 1
+    )
 
-# Describes node on which a pod is running
-function kube-pod-node-describe
-{
-  local pod=${1:?}
-  local node=$(kube-pod-node ${pod})
+    for node in $nodes; do
+      local node_wan=$(kube-node-wan ${node})
 
-  kubectl describe no $node
-}
+      echo "$node - $node_wan"
+    done
+  }
 
-# Returns the WAN IP for the node on which a given pod is running
-function kube-pod-wan
-{
-  local pod=${1:?}
-  local node=$(kube-pod-node ${pod})
+  # Get the node a given pod is running on
+  function kube-pod-node
+  {
+    local pod=${1:?}
+    kubectl describe po ${pod} \
+      | awk '/^Node:/ { split($NF, node, "/"); print node[1] }'
+  }
 
-  kube-node-wan $node
-}
+  # Describes node on which a pod is running
+  function kube-pod-node-describe
+  {
+    local pod=${1:?}
+    local node=$(kube-pod-node ${pod})
 
-# Stub function (should pipe output of 'ssh kube-worker "docker ps"' to this)
-function kube-docker-ps
-{
-  awk '/k8s_POD/ {print $NF}' \
-    | awk -F'_' '{print $4 " " $3}' \
-    | column -t | sort | cat -n
-}
+    kubectl describe no $node
+  }
 
-# Get a count, by type, of all workers in the cluster
-function kube-worker-count
-{
-  kubectl get nodes --show-labels --no-headers \
-    | grep --color=never -o 'instance-type=[^,]*' \
-    | awk -F'=' '{print $2}' \
-    | sort \
-    | uniq -c
-}
+  # Returns the WAN IP for the node on which a given pod is running
+  function kube-pod-wan
+  {
+    local pod=${1:?}
+    local node=$(kube-pod-node ${pod})
 
-# Find pods which have duplicates on the same node
-#TODO: This is really gross, rewrite it
-function kube-duplicates
-{
-  for node in $(kc get no --no-headers | grep -v SchedulingDisabled | awk '{print $1}'); do
-    echo ${node}; kubectl describe node ${node} \
-      | sed '/Non-terminated/,/Allocated/!d' \
-      | sed \$d | tail -n +4 \
-      | grep -v 'kube-system' \
-      | awk '{print $2}' \
-      | rev | cut -d- -f3-| rev \
-      | sort | uniq -c \
-      | grep --color=always -E ' [2-9][0-9]* |$'
-  done
-}
+    kube-node-wan $node
+  }
 
-# Grab a shell / execute a comand on a running pod
-function kube-shell
-{
-  local pod=${1:?}
-  shift
+  # Stub function (should pipe output of 'ssh kube-worker "docker ps"' to this)
+  function kube-docker-ps
+  {
+    awk '/k8s_POD/ {print $NF}' \
+      | awk -F'_' '{print $4 " " $3}' \
+      | column -t | sort | cat -n
+  }
 
-  # Some lazy argument parsing to see if a container is specified
-  if  [[ "$1" == "-c" ]]; then
+  # Get a count, by type, of all workers in the cluster
+  function kube-worker-count
+  {
+    kubectl get nodes --show-labels --no-headers \
+      | grep --color=never -o 'instance-type=[^,]*' \
+      | awk -F'=' '{print $2}' \
+      | sort \
+      | uniq -c
+  }
+
+  # Find pods which have duplicates on the same node
+  #TODO: This is really gross, rewrite it
+  function kube-duplicates
+  {
+    for node in $(kc get no --no-headers | grep -v SchedulingDisabled | awk '{print $1}'); do
+      echo ${node}; kubectl describe node ${node} \
+        | sed '/Non-terminated/,/Allocated/!d' \
+        | sed \$d | tail -n +4 \
+        | grep -v 'kube-system' \
+        | awk '{print $2}' \
+        | rev | cut -d- -f3-| rev \
+        | sort | uniq -c \
+        | grep --color=always -E ' [2-9][0-9]* |$'
+    done
+  }
+
+  # Grab a shell / execute a comand on a running pod
+  function kube-shell
+  {
+    local pod=${1:?}
     shift
-    local container=" -c ${1:?}"
-    shift
-  fi
 
-  local cols=$(tput cols)
-  local lines=$(tput lines)
-  local term='xterm'
-  local cmd=$@
-  cmd=${cmd:-bash}
+    # Some lazy argument parsing to see if a container is specified
+    if  [[ "$1" == "-c" ]]; then
+      shift
+      local container=" -c ${1:?}"
+      shift
+    fi
 
-  kubectl exec -it $pod $container -- env COLUMNS=$cols LINES=$lines TERM=$term "$cmd"
-}
+    local cols=$(tput cols)
+    local lines=$(tput lines)
+    local term='xterm'
+    local cmd=$@
+    cmd=${cmd:-bash}
 
-# Decode and list all key/value pairs in a Kubernetes secret
-function kube-extract-secrets
-{
-  # Make sure we have jq installed
-  if ! command -v 'jq' >/dev/null 2>&1; then
-    (>&2 echo "This function requires 'jq', please install it.")
-    exit 1
-  fi
+    kubectl exec -it $pod $container -- env COLUMNS=$cols LINES=$lines TERM=$term "$cmd"
+  }
 
-  local secret=${1:?}
+  # Decode and list all key/value pairs in a Kubernetes secret
+  function kube-extract-secrets
+  {
+    # Make sure we have jq installed
+    if ! command -v 'jq' >/dev/null 2>&1; then
+      (>&2 echo "This function requires 'jq', please install it.")
+      exit 1
+    fi
 
-  # lazy argument parsing to see if namespace is specified
-  if [ -z ${2+x} ]; then
-    local namespace=''
-  else
-    local namespace=" --namespace=${2}"
-  fi
+    local secret=${1:?}
 
-  kubectl $namespace get secret/${secret} -o json 2>/dev/null \
-    | jq -r '.data | keys[] as $k | "\($k), \(.[$k])"' \
-    | awk '{gsub(",","=",$1); printf "%s", $1; system("echo "$2 " | base64 --decode"); printf "\n"}' \
-    | sed '/^$/d'
-}
+    # lazy argument parsing to see if namespace is specified
+    if [ -z ${2+x} ]; then
+      local namespace=''
+    else
+      local namespace=" --namespace=${2}"
+    fi
 
-# Print cluster wide quota information
-# Note this isn't portable to gnu systems; remove the "g" prefix
-# from numfmt if you want to run it on a gnu/linux system
-# the prefix is needed here to run the GNU binaries of the respective
-# function on a BSD system (mac)
-function kube-quotas
-{
-  kubectl get quota --all-namespaces -o=jsonpath='{range .items[*]}{.metadata.namespace}{"\t"}{.status.used.requests\.cpu}{"\t"}{.status.used.requests\.memory}{"\t"}{.status.hard.requests\.cpu}{"\t"}{.status.hard.requests\.memory}{"\n"}{end}' \
-    | awk '{ if ( $3 ~ "k$" ) { gsub("k$","K",$3 ) } } { print $0 }' \
-    | gnumfmt --from=auto --field=3,5 \
-    | awk 'BEGIN { printf "Namespace Used-CPU Used-Memory Limit-CPU Limit-Memory\n--------- -------- ----------- --------- ------------\n" } { if ( $2 ~ "m" ) { gsub("m","",$2); $2 = $2/1000 } if ( $4 ~ "m" ) { gsub("m","",$4); $4 = $4/1000 } { used_cpu += $2; used_mem += $3; hard_cpu += $4; hard_mem += $5; print } } END { printf "TOTAL %s %s %s %s\n", used_cpu, used_mem, hard_cpu, hard_mem }' \
-    | gnumfmt --to=iec-i --field=3,5 --header=2 \
-    | column -t
-}
+    kubectl $namespace get secret/${secret} -o json 2>/dev/null \
+      | jq -r '.data | keys[] as $k | "\($k), \(.[$k])"' \
+      | awk '{gsub(",","=",$1); printf "%s", $1; system("echo "$2 " | base64 --decode"); printf "\n"}' \
+      | sed '/^$/d'
+  }
 
-# forcibly terminate a pod. Note this may leave the docker container running on the node
-function kube-kill-pod
-{
-  local pod=${1:?}
-  kubectl delete pod "$pod" --force --grace-period=0
-}
+  # Print cluster wide quota information
+  # Note this isn't portable to gnu systems; remove the "g" prefix
+  # from numfmt if you want to run it on a gnu/linux system
+  # the prefix is needed here to run the GNU binaries of the respective
+  # function on a BSD system (mac)
+  function kube-quotas
+  {
+    kubectl get quota --all-namespaces -o=jsonpath='{range .items[*]}{.metadata.namespace}{"\t"}{.status.used.requests\.cpu}{"\t"}{.status.used.requests\.memory}{"\t"}{.status.hard.requests\.cpu}{"\t"}{.status.hard.requests\.memory}{"\n"}{end}' \
+      | awk '{ if ( $3 ~ "k$" ) { gsub("k$","K",$3 ) } } { print $0 }' \
+      | gnumfmt --from=auto --field=3,5 \
+      | awk 'BEGIN { printf "Namespace Used-CPU Used-Memory Limit-CPU Limit-Memory\n--------- -------- ----------- --------- ------------\n" } { if ( $2 ~ "m" ) { gsub("m","",$2); $2 = $2/1000 } if ( $4 ~ "m" ) { gsub("m","",$4); $4 = $4/1000 } { used_cpu += $2; used_mem += $3; hard_cpu += $4; hard_mem += $5; print } } END { printf "TOTAL %s %s %s %s\n", used_cpu, used_mem, hard_cpu, hard_mem }' \
+      | gnumfmt --to=iec-i --field=3,5 --header=2 \
+      | column -t
+  }
 
-# Show deployments which are missing pods
-function kube-missing-pods
-{
-  kubectl get deploy --all-namespaces \
-    | awk 'NR == 1 {print $0 " DIFF"}; NR > 1 {diff=$6-$3; print $0 "\t" diff}' \
-    | grep --color=never -e '[^0]$' \
-    | column -t
-}
+  # forcibly terminate a pod. Note this may leave the docker container running on the node
+  function kube-kill-pod
+  {
+    local pod=${1:?}
+    kubectl delete pod "$pod" --force --grace-period=0
+  }
 
-# Get all RoleBindings and ClusterRoleBindings for a user / group / serviceaccount
-function kube-get-roles
-{
-  local user="${1}"
+  # Show deployments which are missing pods
+  function kube-missing-pods
+  {
+    kubectl get deploy --all-namespaces \
+      | awk 'NR == 1 {print $0 " DIFF"}; NR > 1 {diff=$6-$3; print $0 "\t" diff}' \
+      | grep --color=never -e '[^0]$' \
+      | column -t
+  }
 
-  kubectl get rolebinding,clusterrolebinding --all-namespaces -o json \
-    | jq -r "
-      .items[]
-      | select(.subjects[]?
-        | select(.name == \"${user}\"
+  # Get all RoleBindings and ClusterRoleBindings for a user / group / serviceaccount
+  function kube-get-roles
+  {
+    local user="${1}"
+
+    kubectl get rolebinding,clusterrolebinding --all-namespaces -o json \
+      | jq -r "
+        .items[]
+        | select(.subjects[]?
+          | select(.name == \"${user}\"
+          )
         )
-      )
-      | .roleRef.kind + \"/\" + .roleRef.name + \" \" +
-        (if .metadata.namespace | length > 0
-        then \" (namespace: \" + .metadata.namespace + \")\"
-        else \"\" end)
-    "
-}
+        | .roleRef.kind + \"/\" + .roleRef.name + \" \" +
+          (if .metadata.namespace | length > 0
+          then \" (namespace: \" + .metadata.namespace + \")\"
+          else \"\" end)
+      "
+  }
+
+fi
