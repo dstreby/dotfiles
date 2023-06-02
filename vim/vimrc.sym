@@ -59,6 +59,8 @@ let maplocalleader=","
 nnoremap <silent> <C-l> :nohl<CR><C-l>
 nnoremap <Tab> :bnext<CR>
 nnoremap <S-Tab> :bprevious<CR>
+nmap <F3> i<C-R>=strftime("%Y-%m-%d %a %H:%M")<CR><Esc>
+imap <F3> <C-R>=strftime("%Y-%m-%d %a %H:%M")<CR>
 command Bd bp|bd # " Close buffer without killing split
 command FormatJSON %!python -m json.tool
 
